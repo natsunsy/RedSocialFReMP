@@ -1,12 +1,12 @@
 import React, { Component } from "react";
+import { AvForm, AvGroup, AvInput, AvFeedback } from 'availity-reactstrap-validation';
 
 export default class Login extends Component {
     constructor(props) {
     super(props);
     this.state = {
       email: "",
-      password: "",
-      remember:false
+      password: ""
     };
 
   }
@@ -24,44 +24,32 @@ export default class Login extends Component {
   handleSubmit = async event => {
     event.preventDefault();
     const user = {email:this.state.email, password:this.state.password};
-    const response = await fetch("/sign-in",{
+    const response = await fetch("/",{
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
         body: JSON.stringify(user)
-    });
+    })
   }
-
-  handleCheck() {
-    this.setState({
-      remember: !this.state.remember
-    });
-  }
-    render() {
+  
+  render() {
         return (
-            <form onSubmit={this.handleSubmit}>
+          <AvForm onValidSubmit={this.handleSubmit}>
                 <h3>Iniciar Sesión</h3>
+               <AvGroup>
+                    <AvInput type="email" name="email" value={this.state.email} onChange={this.handleInputChange} className="form-control" placeholder="Correo electrónico" required/>
+                    <AvFeedback>Se necesita ingresar una dirección de correo válida para iniciar sesión.</AvFeedback>
+                </AvGroup>
 
-                <div className="form-group">
-                    <input type="email" name="email" value={this.state.email} onChange={this.handleInputChange} className="form-control" placeholder="Correo electrónico" required/>
-                </div>
-
-                <div className="form-group">
-                    <input type="password" name="password" value={this.state.password} onChange={this.handleInputChange} className="form-control" placeholder="Contraseña" required/>
-                </div>
-
-                <div className="form-group">
-                    <div className="custom-control custom-checkbox">
-                        <input type="checkbox" className="custom-control-input" id="customCheck1"  value={this.state.remember}
-                                onChange={this.handleCheck} />
-                        <label className="custom-control-label" htmlFor="customCheck1">Recordarme</label>
-                    </div>
-                </div>
+                <AvGroup>
+                    <AvInput type="password" name="password" value={this.state.password} onChange={this.handleInputChange} className="form-control" placeholder="Contraseña" required/>
+                    <AvFeedback>Porfavor ingrese una contraseña.</AvFeedback>
+                </AvGroup>
 
                 <button type="submit" className="btn btn-primary btn-block">Iniciar Sesión</button>
                 <p className="forgot-password text-center">
-                 <a href="#">¿Olvidaste tu contraseña?</a>
+                 <a href="/recover">¿Olvidaste tu contraseña?</a>
                 </p>
                 <a type="button" className="btn btn-light btn-block" href="/sign-up">Crear Cuenta Nueva</a>
                 
@@ -75,7 +63,7 @@ export default class Login extends Component {
                 </div>
                 <div id="name"></div>
                 <script>startApp();</script>
-            </form>
+            </AvForm>
         );
     }
 }
