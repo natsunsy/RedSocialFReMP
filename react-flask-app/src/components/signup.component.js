@@ -34,7 +34,8 @@ export default class SignUp extends Component {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(new_user)
+            body: JSON.stringify(new_user),
+            withCredentials: "include"
         }).then(res => res.json())
         .then(data => {
             this.setState({

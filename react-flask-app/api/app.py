@@ -1,14 +1,19 @@
-from flask import Flask, render_template, request, json, redirect, url_for
+from flask import Flask, render_template, request, json
 import db
 app = Flask(__name__)
 
-@app.route('/',methods=['POST'])
+@app.route('/',methods=['POST','GET'])
 def signIn():
     user = json.loads(request.data)
     existent_user = db.db.usuario_collection.find_one({"email":user["email"]})
-    if user["password"] == existent_user["password"]:
-        print({"status":"202 Ha ingresado con éxito."})
-        return redirect(url_for("signUp"))
+    if not existent_user:
+        return {"loggedIn":False,"message": "El correo no existe. Por favor, intente con otro correo.","classStyle":"alert alert-danger"}
+    else:
+        if user["password"] == existent_user["password"]:
+            print({"status":"202 Ha ingresado con éxito."})
+            return {"loggedIn":True}
+        else:
+            return {"loggedIn":False,"message": "Contraseña incorrecta.","classStyle":"alert alert-danger"}
 
 @app.route('/sign-up',methods=["POST"])
 def signUp():

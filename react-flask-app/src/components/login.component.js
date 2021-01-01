@@ -6,7 +6,10 @@ export default class Login extends Component {
     super(props);
     this.state = {
       email: "",
-      password: ""
+      password: "",
+      success:false,
+      message:"",
+      classStyle:""
     };
 
   }
@@ -29,7 +32,18 @@ export default class Login extends Component {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify(user)
+        body: JSON.stringify(user),
+        withCredentials: "include"
+    }).then(res => res.json())
+    .then(data => {
+        if(data.loggedIn){
+            this.props.handleSuccessfulAuth(data);
+        }
+        else{
+            this.setState({ success:true,
+                            message:data.message,
+                            classStyle:data.classStyle})
+        }
     })
   }
   
@@ -63,6 +77,9 @@ export default class Login extends Component {
                 </div>
                 <div id="name"></div>
                 <script>startApp();</script>
+                {this.state.success && <div name="success" className={this.state.classStyle} role="alert">
+                    {this.state.message}
+                </div>}
             </AvForm>
         );
     }
