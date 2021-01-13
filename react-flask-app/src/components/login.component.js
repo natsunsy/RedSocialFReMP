@@ -1,13 +1,19 @@
 import React, { Component } from "react";
 import { AvForm, AvGroup, AvInput, AvFeedback } from 'availity-reactstrap-validation';
+import {Redirect} from "react-router-dom";
 
 export default class Login extends Component {
     constructor(props) {
     super(props);
+    const user = localStorage.getItem("user")
+    let loggedIn = true
+    if(user == null){
+        loggedIn = false
+    }
     this.state = {
       email: "",
       password: "",
-      success:false,
+      loggedIn,
       message:"",
       classStyle:""
     };
@@ -37,17 +43,23 @@ export default class Login extends Component {
     }).then(res => res.json())
     .then(data => {
         if(data.loggedIn){
-            this.props.handleSuccessfulAuth(data);
-        }
-        else{
-            this.setState({ success:true,
-                            message:data.message,
-                            classStyle:data.classStyle})
+            localStorage.setItem("user", data.user)
+            this.setState({ 
+                loggedIn:true
+                            })
+        }else{
+            this.setState({
+                message:data.message,
+                classStyle:data.classStyle
+            })
         }
     })
   }
   
   render() {
+      if(this.state.loggedIn){
+          return <Redirect to="/photo"/>
+      }
         return (
           <AvForm onValidSubmit={this.handleSubmit}>
                 <h3>Iniciar Sesión</h3>
@@ -77,7 +89,7 @@ export default class Login extends Component {
                 </div>
                 <div id="name"></div>
                 <script>startApp();</script>
-                {this.state.success && <div name="success" className={this.state.classStyle} role="alert">
+                {this.state.loggedIn && <div name="success" className={this.state.classStyle} role="alert">
                     {this.state.message}
                 </div>}
             </AvForm>

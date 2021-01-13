@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, json
+from bson import json_util
 import db
 app = Flask(__name__)
 
@@ -11,7 +12,7 @@ def signIn():
     else:
         if user["password"] == existent_user["password"]:
             print({"status":"202 Ha ingresado con éxito."})
-            return {"loggedIn":True}
+            return {"loggedIn":True, "user":json_util.dumps(existent_user)}
         else:
             return {"loggedIn":False,"message": "Contraseña incorrecta.","classStyle":"alert alert-danger"}
 
