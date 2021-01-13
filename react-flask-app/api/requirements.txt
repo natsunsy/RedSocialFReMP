@@ -5,7 +5,16 @@ Flask-Cors==3.0.9
 Flask-PyMongo==2.3.0
 itsdangerous==1.1.0
 Jinja2==2.11.2
+Keras==2.4.3
+Keras-Preprocessing==1.1.2
 MarkupSafe==1.1.1
+numpy==1.19.5
+opencv-python==4.5.1.48
 pymongo==3.11.2
+scipy==1.6.0
 six==1.15.0
+tensorboard==2.4.0
+tensorboard-plugin-wit==1.7.0
+tensorflow==2.4.0
+tensorflow-estimator==2.4.0
 Werkzeug==1.0.1

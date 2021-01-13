@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, json
 from bson import json_util
 import db
+from emotion_recognition import predict_emotion
 app = Flask(__name__)
 
 @app.route('/',methods=['POST','GET'])
@@ -24,3 +25,9 @@ def signUp():
     else:
         db.db.usuario_collection.insert_one(new_user)
         return {"message": "¡Te has registrado con éxito! ","classStyle":"alert alert-success"}
+
+@app.route('/photo',methods=["POST"])
+def photo():
+    image_from_web = json.loads(request.data)
+    feeling = predict_emotion(image_from_web["photo"])
+    return {"feeling":feeling}

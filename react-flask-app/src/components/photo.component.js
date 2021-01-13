@@ -17,11 +17,23 @@ export default class Photo extends Component{
         this.webcam = webcam;
       };
     
-      capture = () => {
+    capture = () => {
         const imageSrc = this.webcam.getScreenshot();
-        console.log(imageSrc)
+        const photo = {photo:imageSrc}
+        const response = fetch("/photo",{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(photo),
+            withCredentials: "include"
+        }).then(res=>res.json())
+        .then(data=>{
+            alert("¡Estas "+data.feeling+"!")
+        })
         this.props.history.push("/inicio")
       };
+
     render(){
         if(!this.state.loggedIn){
             return <Redirect to = "/"/>
