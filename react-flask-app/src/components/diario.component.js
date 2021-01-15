@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import Navbar from '../elements/navbar';
-export default class Muro extends Component{
+export default class Diario extends Component{
     render(){
         return(
             <div>
-                <Navbar title="Inicio"/>
-                <h3>Entraste a tu Muro!</h3>
+                <Navbar title="Diario"/>
+                <h3>Entraste a tu Diario!</h3>
             </div>
         )
     }

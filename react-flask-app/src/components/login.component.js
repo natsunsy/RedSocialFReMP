@@ -61,6 +61,8 @@ export default class Login extends Component {
           return <Redirect to="/photo"/>
       }
         return (
+            <div className="auth-wrapper">
+            <div className="auth-inner">
           <AvForm onValidSubmit={this.handleSubmit}>
                 <h3>Iniciar Sesión</h3>
                <AvGroup>
@@ -93,6 +95,8 @@ export default class Login extends Component {
                     {this.state.message}
                 </div>}
             </AvForm>
+            </div>
+            </div>
         );
     }
 }

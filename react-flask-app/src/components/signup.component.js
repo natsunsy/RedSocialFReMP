@@ -54,6 +54,8 @@ export default class SignUp extends Component {
 
     render() {
         return (
+            <div className="auth-wrapper">
+            <div className="auth-inner">
             <AvForm onValidSubmit={this.handleSubmit}>
                 <h3>Registrarte</h3>
 
@@ -85,6 +87,8 @@ export default class SignUp extends Component {
                     {this.state.message}
                 </div>}
             </AvForm>
+            </div>
+            </div>
         );
     }
 }

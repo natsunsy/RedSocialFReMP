@@ -34,6 +34,8 @@ export default class RecoverPassword extends Component {
 
   render() {
         return (
+          <div className="auth-wrapper">
+            <div className="auth-inner">
           <AvForm onValidSubmit={this.handleSubmit}>
                 <h3>Ingrese su correo electrónico para recuperar su contraseña</h3>
                <AvGroup>
@@ -43,7 +45,8 @@ export default class RecoverPassword extends Component {
                 <button type="submit" className="btn btn-primary btn-block">Enviar</button>
                 <a type="button" className="btn btn-light btn-block" href="/">Volver</a>
             </AvForm>
-            
+            </div>
+            </div>
         );
     }
 }
