@@ -13,7 +13,7 @@ export const SidebarData = [
     {
         title: 'Diario',
         path: '/diario',
-        icon: <IoIcons.IoJournalOutline/>,
+        icon: <IoIcons.IoJournal/>,
         cName: 'nav-text'
     },
 ]

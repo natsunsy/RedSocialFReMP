@@ -20,7 +20,7 @@ def predict_emotion(image_from_web):
     image_from_web = image_from_web.split(',')[1]
     cvimg = stringToImage(image_from_web)
     face_image = toRGB(cvimg)
-    cv2.imshow('foto',face_image)
+    #cv2.imshow('foto',face_image)
 
     face_image = cv2.resize(face_image, (48,48))
     face_image = cv2.cvtColor(face_image, cv2.COLOR_BGR2GRAY)

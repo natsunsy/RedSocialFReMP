@@ -30,7 +30,7 @@ export default class Photo extends Component{
             withCredentials: "include"
         }).then(res=>res.json())
         .then(data=>{
-            alert("¡Estas "+data.feeling+"!")
+            console.log(data.feeling)
         })
         this.props.history.push("/inicio")
       };
