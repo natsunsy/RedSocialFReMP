@@ -3,6 +3,7 @@ import Navbar from '../elements/navbar';
 import './diario.css'
 
 export default class Diario extends Component{
+  
   constructor(props){
     super(props)
     this.data = {}
@@ -16,12 +17,25 @@ export default class Diario extends Component{
     }else{
       this.data = JSON.parse(this.data);
     }
-    console.log(this.data);
+
     this.state = {
       dmorning: this.data.morning,
       dnight: this.data.night,
       dnextday: this.data.nextday
     }
+  }
+  componentDidMount() {
+    let t = new Date()
+    let Hr = t.getHours()
+
+    if (Hr < 12){
+      window.scrollTo(50,0)
+    }else if (Hr < 18){
+      window.scrollTo(50,450)
+    }else{
+      window.scrollTo(50,850)
+    }
+
   }
 
    handleChangeMorning = (e) => {
@@ -84,6 +98,7 @@ export default class Diario extends Component{
                     {this.state.dnight}
                 </textarea>
             </div>
+
             <div>
                 <div>
                     <div className = "text">¿Qué puedo hacer mañana?</div>
