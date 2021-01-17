@@ -1,6 +1,6 @@
 import numpy as np
+from fer import FER
 import cv2
-from keras.models import load_model
 import base64
 from PIL import Image
 from io import BytesIO
@@ -16,22 +16,10 @@ def toRGB(image):
 
 
 def predict_emotion(image_from_web):
-    emotion_dict= {'Molesto': 0, 'Triste': 5, 'Neutral': 4, 'Disgustado': 1, 'Sorpendido': 6, 'Asustado': 2, 'Feliz': 3}
+    emotions={'happy':"feliz", 'sad':"triste", 'disgust':"disgustado", 'angry':"molesto", 'fear':"aterrado", 'neutral':"neutral",'surprise':"sorprendido"}
     image_from_web = image_from_web.split(',')[1]
     cvimg = stringToImage(image_from_web)
-    face_image = toRGB(cvimg)
-    #cv2.imshow('foto',face_image)
-
-    face_image = cv2.resize(face_image, (48,48))
-    face_image = cv2.cvtColor(face_image, cv2.COLOR_BGR2GRAY)
-    face_image = np.reshape(face_image, [1, face_image.shape[0], face_image.shape[1], 1])
-
-    model = load_model("static/model_v6_23.hdf5")
-
-    predicted_class = np.argmax(model.predict(face_image))
-
-    label_map = dict((v,k) for k,v in emotion_dict.items()) 
-    predicted_label = label_map[predicted_class]
-
-    return predicted_label
-#TODO GET ONLY THE FACE IN ORDER TO DETECT THE REAL EMOTION
+    image = toRGB(cvimg)
+    detector = FER(mtcnn=True)
+    emotion, score = detector.top_emotion(image)
+    return emotions[emotion]
