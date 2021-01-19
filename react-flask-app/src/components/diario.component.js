@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Navbar from '../elements/navbar';
+import Header from "../elements/header";
 import './diario.css'
 
 export default class Diario extends Component{
@@ -76,41 +76,39 @@ export default class Diario extends Component{
     render(){
         return(
           <>
-            <div>
-                <Navbar title="Diario"/>
-                <div id = "today-label">Hoy</div>
-            </div>
-         <form className = "form-diario" onSubmit = {this.handleSubmit}>
-             <div>
-            <div>
-                <div>
-                    <div className = "text">¿Qué planes tengo hoy?</div>
-                </div>
-                <textarea class="text_diario" name="ftmorning" onChange = {this.handleChangeMorning} rows="4" cols="25">
-                    {this.state.dmorning}
-                </textarea>
-            </div>
-            <div>
-                <div>
-                    <div className = "text">¿Qué hizo que este sea un buen día?</div>
-                </div>            
-                <textarea className="text_diario" name="ftnight" onChange = {this.handleChangeNight} rows="4" cols="50">
-                    {this.state.dnight}
-                </textarea>
-            </div>
+          <Header title="Diario"/>            
+          <div id = "today-label">Hoy</div>
 
-            <div>
-                <div>
-                    <div className = "text">¿Qué puedo hacer mañana?</div>
-                </div>
-                <textarea className="text_diario" name="ftnextday" onChange = {this.handleChangeNextday} rows="4" cols="50">
-                    {this.state.dnextday}
-                </textarea>
-            </div>
-              <input type="submit" className="saveDay" value="Guardar" />
-            </div>
-            </form>
-          </>
+          <form className = "form-diario" onSubmit = {this.handleSubmit}>
+              
+                  <div>
+                      <div className = "text">¿Qué planes tengo hoy?</div>
+                  </div>
+                  <textarea className="text_diario" name="ftmorning" onChange = {this.handleChangeMorning} rows="4" cols="40">
+                      {this.state.dmorning}
+                  </textarea>
+              
+              
+                  <div>
+                      <div className = "text">¿Qué hizo que este sea un buen día?</div>
+                  </div>            
+                  <textarea className="text_diario" name="ftnight" onChange = {this.handleChangeNight} rows="4" cols="40">
+                      {this.state.dnight}
+                  </textarea>
+              
+
+              
+                  <div>
+                      <div className = "text">¿Qué puedo hacer mañana?</div>
+                  </div>
+                  <textarea className="text_diario" name="ftnextday" onChange = {this.handleChangeNextday} rows="4" cols="40">
+                      {this.state.dnextday}
+                  </textarea>
+              
+                <input type="submit" className="saveDay" value="Guardar" />
+              
+              </form>
+            </>
         )
     }
 }

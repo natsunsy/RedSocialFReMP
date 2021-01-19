@@ -1,10 +1,6 @@
-.text_diario{
-  width: 90%;
+.form-diario {
+  padding: 0% 7%;
 }
-/*
-.form-diario{
-}
-*/
 .form-diario input{
   display: block;
   margin-left: auto;
@@ -58,7 +54,7 @@
 @media only screen and (min-width: 768px) {
   /* For desktop: */
 .text_diario{
-  width: 60%;
+  width: 90%;
 }
 .text{
   font-size: 30px;
