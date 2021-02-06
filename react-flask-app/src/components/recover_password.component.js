@@ -23,7 +23,7 @@ export default class RecoverPassword extends Component {
   handleSubmit = async event => {
     event.preventDefault();
     const user = {email:this.state.email, password:this.state.password};
-    const response = await fetch("/recoverpassword",{
+    await fetch("/recoverpassword",{
         method: "POST",
         headers: {
             "Content-Type": "application/json"

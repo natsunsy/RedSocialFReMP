@@ -1,114 +1,90 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
 import Header from "../elements/header";
-import './diario.css'
+import FormToDo from "../elements/formtodo";
+import TaskList from "../elements/tasklist";
+import styles from './diario.module.css'
 
 export default class Diario extends Component{
-  
   constructor(props){
     super(props)
-    this.data = {}
-    this.data = localStorage.getItem('today');
-    if (this.data == null) {
-      this.data = {
-        "morning" : '',
-        "night" : '',
-        "nextday" : ''
-      }
-    }else{
-      this.data = JSON.parse(this.data);
-    }
-
+    const user = localStorage.getItem("userId")
+    let loggedIn = true
+    if(user == null){
+      loggedIn = false
+  }
     this.state = {
-      dmorning: this.data.morning,
-      dnight: this.data.night,
-      dnextday: this.data.nextday
+      loggedIn,
+      task:{},
+      date: new Date().toLocaleDateString('ja', {
+        year:  'numeric',
+        month: '2-digit',
+        day:   '2-digit'
+    }).replace(/\//g, '-')
     }
-  }
-  componentDidMount() {
-    let t = new Date()
-    let Hr = t.getHours()
-
-    if (Hr < 12){
-      window.scrollTo(50,0)
-    }else if (Hr < 18){
-      window.scrollTo(50,450)
-    }else{
-      window.scrollTo(50,850)
-    }
-
+    this.handleAddItem.bind()
+    this.handleRemoveItem.bind()
+    this.handleUpdateItem.bind()
   }
 
-   handleChangeMorning = (e) => {
-    this.setState({dmorning: e.target.value});
-    this.data.morning =  e.target.value
-    localStorage.setItem('today', JSON.stringify(this.data) );
-     console.log(this.data)
-    console.log(this.state.dmorning)
-   }
+  handleAddItem = addItem => {
+    fetch("/diario/tareas/",{
+      method: "POST",
+      headers: {
+          "Content-Type": "application/json"
+      },
+      body: JSON.stringify(addItem),
+      withCredentials: "include"
+  }).then(res=>res.json()).then(data=>this.setState({
+    task: data.task
+  }))
+  
+};
 
-  handleChangeNight = (e) => {
-    this.setState({dnight: e.target.value});
-    this.data.night =  e.target.value
-    localStorage.setItem('today', JSON.stringify(this.data) );
-     console.log(this.data)
-    console.log(this.state.dnight)
-   }
+handleRemoveItem= id =>{
+  const userId = localStorage.getItem("userId")
+  fetch('/diario/tareas/'+userId+'/'+id,{method:'DELETE'})
+  .then(res=>res.json()).then(data=>this.setState({
+    task: data.task
+  }))
+}
 
-  handleChangeNextday = (e) => {
-    this.setState({dnextday: e.target.value});
-    this.data.nextday =  e.target.value
-    localStorage.setItem('today', JSON.stringify(this.data) );
-     console.log(this.data)
-    console.log(this.state.dnextday)
-   }
-
-   handleSubmit = (e) => {
-     let hoy = {
-       "morning": this.state.dmorning,
-       "night": this.state.dnight,
-       "dnextday": this.state.dnextday
-     }
-     alert(JSON.stringify(hoy));
-     console.log(hoy);
-    e.preventDefault();
-   }
+handleUpdateItem=id=>{
+  const userId = localStorage.getItem("userId")
+  fetch('/diario/tareas/'+userId+'/'+id,{method:'PUT'})
+  .then(res=>res.json()).then(data=>this.setState({
+    task: data.task
+  }))
+}
 
     render(){
+      if(!this.state.loggedIn){
+        return <Redirect to = "/"/>
+    }
+    let title,placeholder,done
+      if(new Date().getHours()<12){
+        title="¿Qué puedo hacer hoy?"
+        placeholder="Añade una tarea..."
+        done=false
+      }else if(new Date().getHours()<19){
+        title="¿Qué logré hacer hoy?"
+        placeholder="Agregue una tarea completada..."
+        done=true
+      }else{
+        title="¿Qué podría hacer mañana?"
+        placeholder="Agregue tareas para mañana..."
+        done=false
+      }
+
         return(
           <>
-          <Header title="Diario"/>            
-          <div id = "today-label">Hoy</div>
-
-          <form className = "form-diario" onSubmit = {this.handleSubmit}>
-              
-                  <div>
-                      <div className = "text">¿Qué planes tengo hoy?</div>
-                  </div>
-                  <textarea className="text_diario" name="ftmorning" onChange = {this.handleChangeMorning} rows="4" cols="40">
-                      {this.state.dmorning}
-                  </textarea>
-              
-              
-                  <div>
-                      <div className = "text">¿Qué hizo que este sea un buen día?</div>
-                  </div>            
-                  <textarea className="text_diario" name="ftnight" onChange = {this.handleChangeNight} rows="4" cols="40">
-                      {this.state.dnight}
-                  </textarea>
-              
-
-              
-                  <div>
-                      <div className = "text">¿Qué puedo hacer mañana?</div>
-                  </div>
-                  <textarea className="text_diario" name="ftnextday" onChange = {this.handleChangeNextday} rows="4" cols="40">
-                      {this.state.dnextday}
-                  </textarea>
-              
-                <input type="submit" className="saveDay" value="Guardar" />
-              
-              </form>
-            </>
+            <Header title="Diario"/>
+            <div className = {styles.todayLabel}>Hoy</div>
+            
+            <div className={styles.question}>{title}</div>          
+            <FormToDo handleAddItem={this.handleAddItem} placeholder={placeholder} styles={styles} done={done}/>
+            <TaskList handleUpdateItem={this.handleUpdateItem} handleRemoveItem={this.handleRemoveItem} task={this.state.task} date={this.state.date} styles={styles}/>
+          </>
         )
     }
 }

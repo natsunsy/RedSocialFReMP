@@ -6,9 +6,8 @@ import * as IoIcons from 'react-icons/io5';
 export default class Photo extends Component{
     constructor(props){
         super(props)
-        const user = localStorage.getItem("user")
+        const user = localStorage.getItem("userId")
         let loggedIn = true
-        console.log(user)
         if(user == null){
             loggedIn = false
         }
@@ -21,7 +20,7 @@ export default class Photo extends Component{
     capture = () => {
         const imageSrc = this.webcam.getScreenshot();
         const photo = {photo:imageSrc}
-        const response = fetch("/photo",{
+        fetch("/photo",{
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

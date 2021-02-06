@@ -5,3 +5,4 @@ CONNECTION_STRING = "mongodb+srv://admin:dIH5rHKYkESeqyKr@redsocial.627dc.mongod
 client = pymongo.MongoClient(CONNECTION_STRING)
 db = client.get_database('redsocial')
 usuario_collection = pymongo.collection.Collection(db, 'usuario_collection')
+diario_collection = pymongo.collection.Collection(db,'diario_collection')

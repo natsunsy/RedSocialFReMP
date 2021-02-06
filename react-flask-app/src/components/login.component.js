@@ -5,7 +5,7 @@ import {Redirect} from "react-router-dom";
 export default class Login extends Component {
     constructor(props) {
     super(props);
-    const user = localStorage.getItem("user")
+    const user = localStorage.getItem("userId")
     let loggedIn = true
     if(user == null){
         loggedIn = false
@@ -33,7 +33,7 @@ export default class Login extends Component {
   handleSubmit = async event => {
     event.preventDefault();
     const user = {email:this.state.email, password:this.state.password};
-    const response = await fetch("/",{
+    await fetch("/",{
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -43,7 +43,7 @@ export default class Login extends Component {
     }).then(res => res.json())
     .then(data => {
         if(data.loggedIn){
-            localStorage.setItem("user", data.user)
+            localStorage.setItem("userId", data.userId)
             this.setState({ 
                 loggedIn:true
                             })
