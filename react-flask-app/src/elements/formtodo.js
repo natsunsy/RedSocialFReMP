@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import { GrAdd } from "react-icons/gr";
 
-export default function FormToDo({handleAddItem,styles,placeholder,done}) {
+export default function FormToDo({handleAddItem,styles,placeholder,done,date}) {
     const [description, setDescription] = useState("");
     const userId = localStorage.getItem("userId")
     const handleSubmit = (e) =>{
@@ -10,11 +10,7 @@ export default function FormToDo({handleAddItem,styles,placeholder,done}) {
             userId:userId,
             description,
             done:done,
-            date: new Date().toLocaleDateString('ja', {
-                year:  'numeric',
-                month: '2-digit',
-                day:   '2-digit'
-            }).replace(/\//g, '-')
+            date: date
         })
         setDescription("")
     }
