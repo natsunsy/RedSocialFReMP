@@ -27,7 +27,7 @@ def sign_in():
         return {"loggedIn":False,"message": "El correo no existe. Por favor, intente con otro correo.","classStyle":"alert alert-danger"}
     else:
         if user["password"] == existent_user["password"]:
-            return jsonify({"loggedIn":True, "userId":existent_user["_id"]})
+            return {"loggedIn":True, "user":existent_user}
         else:
             return {"loggedIn":False,"message": "Contraseña incorrecta.","classStyle":"alert alert-danger"}
 

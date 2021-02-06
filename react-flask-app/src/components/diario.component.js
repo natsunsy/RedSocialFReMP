@@ -8,13 +8,11 @@ import styles from './diario.module.css'
 export default class Diario extends Component{
   constructor(props){
     super(props)
-    const user = localStorage.getItem("userId")
-    let loggedIn = true
-    if(user == null){
-      loggedIn = false
-  }
+    const sessionStr = localStorage.getItem("session")
+    const sessionJson = JSON.parse(sessionStr)
+   
     this.state = {
-      loggedIn,
+      loggedIn:sessionJson.loggedIn,
       task:{},
       date: new Date().toLocaleDateString('ja', {
         year:  'numeric',
@@ -42,7 +40,9 @@ export default class Diario extends Component{
 };
 
 handleRemoveItem= id =>{
-  const userId = localStorage.getItem("userId")
+  const sessionStr = localStorage.getItem("session")
+  const sessionJson = JSON.parse(sessionStr)
+  const userId = sessionJson.user._id
   fetch('/diario/tareas/'+userId+'/'+id,{method:'DELETE'})
   .then(res=>res.json()).then(data=>this.setState({
     task: data.task
@@ -50,7 +50,9 @@ handleRemoveItem= id =>{
 }
 
 handleUpdateItem=id=>{
-  const userId = localStorage.getItem("userId")
+  const sessionStr = localStorage.getItem("session")
+  const sessionJson = JSON.parse(sessionStr)
+  const userId = sessionJson.user._id
   fetch('/diario/tareas/'+userId+'/'+id,{method:'PUT'})
   .then(res=>res.json()).then(data=>this.setState({
     task: data.task

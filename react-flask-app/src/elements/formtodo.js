@@ -3,7 +3,9 @@ import { GrAdd } from "react-icons/gr";
 
 export default function FormToDo({handleAddItem,styles,placeholder,done,date}) {
     const [description, setDescription] = useState("");
-    const userId = localStorage.getItem("userId")
+    const sessionStr = localStorage.getItem("session")
+    const sessionJson = JSON.parse(sessionStr)
+    const userId = sessionJson.user._id
     const handleSubmit = (e) =>{
         e.preventDefault();
         handleAddItem({

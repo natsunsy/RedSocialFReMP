@@ -5,15 +5,12 @@ import {Redirect} from "react-router-dom";
 export default class Login extends Component {
     constructor(props) {
     super(props);
-    const user = localStorage.getItem("userId")
-    let loggedIn = true
-    if(user == null){
-        loggedIn = false
-    }
+    const sessionStr = localStorage.getItem("session")
+    const sessionJson = JSON.parse(sessionStr)
     this.state = {
       email: "",
       password: "",
-      loggedIn,
+      loggedIn:sessionJson.loggedIn,
       message:"",
       classStyle:""
     };
@@ -43,7 +40,8 @@ export default class Login extends Component {
     }).then(res => res.json())
     .then(data => {
         if(data.loggedIn){
-            localStorage.setItem("userId", data.userId)
+            localStorage.setItem("session", JSON.stringify(data))
+
             this.setState({ 
                 loggedIn:true
                             })

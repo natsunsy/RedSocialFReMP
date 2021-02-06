@@ -6,12 +6,9 @@ import * as IoIcons from 'react-icons/io5';
 export default class Photo extends Component{
     constructor(props){
         super(props)
-        const user = localStorage.getItem("userId")
-        let loggedIn = true
-        if(user == null){
-            loggedIn = false
-        }
-        this.state={loggedIn}
+        const sessionStr = localStorage.getItem("session")
+        const sessionJson = JSON.parse(sessionStr)
+        this.state={loggedIn:sessionJson.loggedIn}
     }
     setRef = webcam => {
         this.webcam = webcam;

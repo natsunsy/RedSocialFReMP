@@ -7,7 +7,9 @@ export default function TaskList(props) {
     
     useEffect(() => {
         const {date}=props
-        const userId = localStorage.getItem("userId")
+        const sessionStr = localStorage.getItem("session")
+        const sessionJson = JSON.parse(sessionStr)
+        const userId = sessionJson.user._id
         fetch('/diario/tareas/'+userId+'/'+date)
             .then(response => response.json())
             .then(data => setTasks(data.tasks)
