@@ -6,11 +6,14 @@ export default class Login extends Component {
     constructor(props) {
     super(props);
     const sessionStr = localStorage.getItem("session")
-    const sessionJson = JSON.parse(sessionStr)
+    let loggedIn
+    if(sessionStr == null)
+        loggedIn = false
+
     this.state = {
       email: "",
       password: "",
-      loggedIn:sessionJson.loggedIn,
+      loggedIn,
       message:"",
       classStyle:""
     };
@@ -43,7 +46,7 @@ export default class Login extends Component {
             localStorage.setItem("session", JSON.stringify(data))
 
             this.setState({ 
-                loggedIn:true
+                loggedIn:data.loggedIn
                             })
         }else{
             this.setState({

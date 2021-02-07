@@ -7,3 +7,10 @@
     align-items: center;
     width: 100%;
 }
+/*por ahora:*/
+@media (min-width:1200px){
+    .inicio{
+        padding-left: 20%;
+        padding-right: 20%;
+    }
+}

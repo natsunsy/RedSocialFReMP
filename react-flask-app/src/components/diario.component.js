@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
+import { Redirect } from "react-router-dom/cjs/react-router-dom";
 import Header from "../elements/header";
 import FormToDo from "../elements/formtodo";
 import TaskList from "../elements/tasklist";
@@ -10,9 +10,13 @@ export default class Diario extends Component{
     super(props)
     const sessionStr = localStorage.getItem("session")
     const sessionJson = JSON.parse(sessionStr)
-   
+    let loggedIn
+        if(sessionStr == null)
+            loggedIn = false
+        else
+            loggedIn = sessionJson.loggedIn
     this.state = {
-      loggedIn:sessionJson.loggedIn,
+      loggedIn,
       task:{},
       date: new Date().toLocaleDateString('ja', {
         year:  'numeric',

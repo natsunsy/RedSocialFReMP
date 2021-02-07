@@ -8,15 +8,15 @@ import NearMeIcon from "@material-ui/icons/NearMe";
 import {ExpandMoreOutlined} from "@material-ui/icons";
 import "./post.css";
 
-export default function Post({profilePic, image, username, timestamp, message}) {
+export default function Post({image, username, message,timestamp}) {
     return (
     <div className="post">
         <div className="post__top">
-            <Avatar srd={profilePic}
+            <Avatar src="https://scontent.flim11-1.fna.fbcdn.net/v/t1.0-9/130249199_4085934954754163_3099918067762144354_n.jpg?_nc_cat=101&ccb=2&_nc_sid=09cbfe&_nc_eui2=AeHQfj-ySbhveZyUGvRhOKopRs1cdnmMOm9GzVx2eYw6b2-aJ_wuroadDOfGAB7a8Pff-r76GyKzGMExSxFU20jR&_nc_ohc=MXzxM-zn6IAAX8-bXQn&_nc_ht=scontent.flim11-1.fna&oh=1f9a0965813770f603b008be42eeb9ba&oe=602CCDBE"
             className="post__avatar"/>
             <div className="post__topInfo">
                 <h3>{username}</h3>
-                <p>Timestamp...</p>
+                <p>{timestamp}</p>
             </div>
         </div>
 

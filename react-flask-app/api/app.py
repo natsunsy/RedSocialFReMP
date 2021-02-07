@@ -79,3 +79,20 @@ def update_task(userId,_id):
     newTask = db.db.diario_collection.find_one({"userId":userId,"_id":_id})
     newTask = JsonEncodeOne(newTask)
     return {"task":newTask}
+    
+@app.route('/inicio/posts/',methods=["POST"])
+def add_post():
+    new_post = json.loads(request.data)
+    userId = objectid.ObjectId(new_post["userId"])
+    new_post["userId"] = userId
+    db.db.post_collection.insert_one(new_post)
+    new_post = JsonEncodeOne(new_post)
+    return {"post":new_post}
+
+@app.route('/inicio/posts/<userId>/',methods=['GET'])
+def get_posts(userId):
+    userId = objectid.ObjectId(userId)
+    posts = [post for post in db.db.post_collection.find({"userId":userId})]
+    posts.reverse()                                                                                                                                
+    posts = JsonEncoder(posts)
+    return {"posts":posts}

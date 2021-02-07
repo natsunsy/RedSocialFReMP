@@ -1,28 +1,72 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router-dom/cjs/react-router-dom";
 import Header from "../elements/header";
 import MessageSender from "../elements/messagesender";
 import Post from "../elements/post";
 import './muro.css'
 export default class Muro extends Component{
+    constructor(props){
+        super(props)
+        const sessionStr = localStorage.getItem("session")
+        const sessionJson = JSON.parse(sessionStr)
+        let loggedIn
+            if(sessionStr == null)
+                loggedIn = false
+            else
+                loggedIn = sessionJson.loggedIn
+
+        this.state = {
+            loggedIn,
+            post:{},
+            posts:[]
+        }
+        this.handleAddPost.bind()
+    }
+
+    componentDidMount(){
+        const sessionStr = localStorage.getItem("session")
+        const sessionJson = JSON.parse(sessionStr)
+        const userId = sessionJson.user._id
+        fetch('/inicio/posts/'+userId+'/')
+        .then(response => response.json())
+        .then(data => this.setState({posts:data.posts}),
+       );
+    }
+
+    handleAddPost = addPost => {
+        fetch("/inicio/posts/",{
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify(addPost),
+          withCredentials: "include"
+      }).then(res=>res.json()).then(data=>this.setState({
+        post: data.post,
+        posts:[data.post,...this.state.posts]
+      }))
+      
+    };
+
     render(){
+        if(!this.state.loggedIn){
+            return <Redirect to = "/"/>
+        }
+
+        const postList = this.state.posts.map(post =><Post key={post._id}
+                                                        message={post.message}
+                                                        timestamp={post.timestamp}
+                                                        username={post.username}
+                                                        image={post.imageUrl}
+                                                    />)
         return(
             <div>
                 <Header title="Inicio"/>
-                <div className="feed">
-                    <MessageSender/>
-                    <Post 
-                        profilePic="https://scontent.flim11-1.fna.fbcdn.net/v/t1.0-9/130249199_4085934954754163_3099918067762144354_n.jpg?_nc_cat=101&ccb=2&_nc_sid=09cbfe&_nc_eui2=AeHQfj-ySbhveZyUGvRhOKopRs1cdnmMOm9GzVx2eYw6b2-aJ_wuroadDOfGAB7a8Pff-r76GyKzGMExSxFU20jR&_nc_ohc=MXzxM-zn6IAAX8-bXQn&_nc_ht=scontent.flim11-1.fna&oh=1f9a0965813770f603b008be42eeb9ba&oe=602CCDBE"
-                        message='Funcionó'
-                        timestamp="Esta es la hora"
-                        username="Alex Chung"
-                        image="https://cdn.vox-cdn.com/thumbor/KlvsWuCP3MFABXFVc42v8h5rX8g=/1400x788/filters:format(jpeg)/cdn.vox-cdn.com/uploads/chorus_asset/file/13720701/shaggyyy.jpg" 
-                    />
-                    <Post 
-                        profilePic="https://scontent.flim11-1.fna.fbcdn.net/v/t1.0-9/130249199_4085934954754163_3099918067762144354_n.jpg?_nc_cat=101&ccb=2&_nc_sid=09cbfe&_nc_eui2=AeHQfj-ySbhveZyUGvRhOKopRs1cdnmMOm9GzVx2eYw6b2-aJ_wuroadDOfGAB7a8Pff-r76GyKzGMExSxFU20jR&_nc_ohc=MXzxM-zn6IAAX8-bXQn&_nc_ht=scontent.flim11-1.fna&oh=1f9a0965813770f603b008be42eeb9ba&oe=602CCDBE"
-                        message='Funcionó'
-                        timestamp="Esta es la hora"
-                        username="Alex Chung"
-                    />
+                <div className="inicio">
+                    <div className="feed">
+                        <MessageSender handleAddPost={this.handleAddPost}/>
+                        {postList}
+                    </div>
                 </div>
             </div>
         )

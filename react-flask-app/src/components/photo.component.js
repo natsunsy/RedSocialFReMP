@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Redirect } from "react-router-dom/cjs/react-router-dom.min";
+import { Redirect } from "react-router-dom/cjs/react-router-dom";
 import Webcam from "react-webcam";
 import * as IoIcons from 'react-icons/io5';
 
@@ -8,7 +8,12 @@ export default class Photo extends Component{
         super(props)
         const sessionStr = localStorage.getItem("session")
         const sessionJson = JSON.parse(sessionStr)
-        this.state={loggedIn:sessionJson.loggedIn}
+        let loggedIn
+        if(sessionStr == null)
+            loggedIn = false
+        else
+            loggedIn = sessionJson.loggedIn
+        this.state={loggedIn}
     }
     setRef = webcam => {
         this.webcam = webcam;
