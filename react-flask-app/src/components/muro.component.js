@@ -3,7 +3,15 @@ import { Redirect } from "react-router-dom/cjs/react-router-dom";
 import Header from "../elements/header";
 import MessageSender from "../elements/messagesender";
 import Post from "../elements/post";
+import TimeAgo from 'javascript-time-ago'
+
+import en from 'javascript-time-ago/locale/en'
+import es from 'javascript-time-ago/locale/es'
 import './muro.css'
+TimeAgo.addDefaultLocale(es)
+TimeAgo.addLocale(en)
+
+
 export default class Muro extends Component{
     constructor(props){
         super(props)
@@ -25,12 +33,13 @@ export default class Muro extends Component{
 
     componentDidMount(){
         const sessionStr = localStorage.getItem("session")
+        if(sessionStr != null){
         const sessionJson = JSON.parse(sessionStr)
         const userId = sessionJson.user._id
         fetch('/inicio/posts/'+userId+'/')
         .then(response => response.json())
         .then(data => this.setState({posts:data.posts}),
-       );
+       );}
     }
 
     handleAddPost = addPost => {
@@ -60,7 +69,6 @@ export default class Muro extends Component{
         if(!this.state.loggedIn){
             return <Redirect to = "/"/>
         }
-
         const postList = this.state.posts.map(post =><Post key={post._id}
                                                         id = {post._id}
                                                         userId = {post.userId}

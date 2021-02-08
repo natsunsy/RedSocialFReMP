@@ -26,7 +26,7 @@ export default function MessageSender({handleAddPost}){
             username:user.name+" "+user.lastname,
             message:input,
             imageUrl:imageUrl,
-            timestamp:new Date().toLocaleString()
+            timestamp:new Date()
         })
         setInput("")
         setImageUrl("")
@@ -46,7 +46,7 @@ export default function MessageSender({handleAddPost}){
                 value={imageUrl}
                 onChange={ (e) => setImageUrl(e.target.value)}
                 placeholder="URL de la imagen (Opcional)"/>
-                <button className="btn float-right" onClick={handleSubmit} type="submit">Publicar</button>
+                <button className="btn float-right" onClick={handleSubmit} type="submit" disabled={input ? "" : "disabled"}>Publicar</button>
             </form>
         </div>
 
