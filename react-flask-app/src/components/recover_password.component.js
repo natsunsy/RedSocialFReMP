@@ -1,11 +1,15 @@
 import React, { Component } from "react";
-import { AvForm, AvGroup, AvInput, AvFeedback } from 'availity-reactstrap-validation';
+
+const validEmailRegex = RegExp(
+  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+);
 
 export default class RecoverPassword extends Component {
     constructor(props) {
     super(props);
     this.state = {
       email: "",
+      errors:{email:""}
     };
 
   }
@@ -15,7 +19,20 @@ export default class RecoverPassword extends Component {
     const value = target.value;
     const name = target.name;
 
+    let errors = this.state.errors;
+
+    switch (name) {
+      case 'email': 
+        errors.email = 
+          validEmailRegex.test(value)
+            ? ''
+            : 'Debe ingresar un correo electrónico válido.';
+        break;
+      default:
+        break;
+    }
     this.setState({
+      errors,
       [name]: value
     });
   }
@@ -33,18 +50,19 @@ export default class RecoverPassword extends Component {
   }
 
   render() {
+    const {errors} = this.state;
         return (
           <div className="auth-wrapper">
             <div className="auth-inner">
-          <AvForm onValidSubmit={this.handleSubmit}>
+          <form onSubmit={this.handleSubmit}>
                 <h3>Ingrese su correo electrónico para recuperar su contraseña</h3>
-               <AvGroup>
-                    <AvInput type="email" name="email" value={this.state.email} onChange={this.handleInputChange} className="form-control" placeholder="Correo electrónico" required/>
-                    <AvFeedback>Se necesita ingresar una dirección de correo válida para recuperar su contraseña.</AvFeedback>
-                </AvGroup>
+              
+                <input type="email" name="email" value={this.state.email} onChange={this.handleInputChange} className="form-control" placeholder="Correo electrónico" required/>
+                {errors.email.length > 0 && 
+                <span className='error'>{errors.email}</span>}
                 <button type="submit" className="btn btn-primary btn-block">Enviar</button>
                 <a type="button" className="btn btn-light btn-block" href="/">Volver</a>
-            </AvForm>
+            </form>
             </div>
             </div>
         );

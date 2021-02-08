@@ -1,12 +1,14 @@
 import React, { Component } from "react";
-import { AvForm, AvGroup, AvInput, AvFeedback } from 'availity-reactstrap-validation';
 import {Redirect} from "react-router-dom";
-
+const validEmailRegex = RegExp(
+    /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
+  );
+  
 export default class Login extends Component {
     constructor(props) {
     super(props);
     const sessionStr = localStorage.getItem("session")
-    let loggedIn
+    let loggedIn=true
     if(sessionStr == null)
         loggedIn = false
 
@@ -15,7 +17,8 @@ export default class Login extends Component {
       password: "",
       loggedIn,
       message:"",
-      classStyle:""
+      classStyle:"",
+      errors:{email:""}
     };
 
   }
@@ -25,8 +28,21 @@ export default class Login extends Component {
     const value = target.value;
     const name = target.name;
 
+    let errors = this.state.errors;
+
+    switch (name) {
+      case 'email': 
+        errors.email = 
+          validEmailRegex.test(value)
+            ? ''
+            : 'Debe ingresar un correo electrónico válido.';
+        break;
+      default:
+        break;
+    }
+
     this.setState({
-      [name]: value
+      errors,[name]: value
     });
   }
   
@@ -61,21 +77,20 @@ export default class Login extends Component {
       if(this.state.loggedIn){
           return <Redirect to="/photo"/>
       }
+      const {errors} = this.state;
         return (
             <div className="auth-wrapper">
             <div className="auth-inner">
-          <AvForm onValidSubmit={this.handleSubmit}>
+          <form onSubmit={this.handleSubmit}>
                 <h3>Iniciar Sesión</h3>
-               <AvGroup>
-                    <AvInput type="email" name="email" value={this.state.email} onChange={this.handleInputChange} className="form-control" placeholder="Correo electrónico" required/>
-                    <AvFeedback>Se necesita ingresar una dirección de correo válida para iniciar sesión.</AvFeedback>
-                </AvGroup>
-
-                <AvGroup>
-                    <AvInput type="password" name="password" value={this.state.password} onChange={this.handleInputChange} className="form-control" placeholder="Contraseña" required/>
-                    <AvFeedback>Porfavor ingrese una contraseña.</AvFeedback>
-                </AvGroup>
-
+                <div className="email">
+                    <input type="email" name="email" value={this.state.email} onChange={this.handleInputChange} className="form-control" placeholder="Correo electrónico" required/>
+                    {errors.email.length > 0 && 
+                    <span className='error'>{errors.email}</span>}
+                </div>
+                <div className="password">
+                    <input type="password" name="password" value={this.state.password} onChange={this.handleInputChange} className="form-control" placeholder="Contraseña" required/>
+                </div>
                 <button type="submit" className="btn btn-primary btn-block">Iniciar Sesión</button>
                 <p className="forgot-password text-center">
                  <a href="/recover">¿Olvidaste tu contraseña?</a>
@@ -95,7 +110,7 @@ export default class Login extends Component {
                 {this.state.loggedIn && <div name="success" className={this.state.classStyle} role="alert">
                     {this.state.message}
                 </div>}
-            </AvForm>
+            </form>
             </div>
             </div>
         );
