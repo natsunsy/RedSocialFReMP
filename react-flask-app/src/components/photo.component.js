@@ -47,21 +47,21 @@ export default class Photo extends Component{
           };
         return(
             <div className="auth-wrapper">
-            <div className="auth-inner">
-            <form className="cameraFrame">
-                <Webcam
-                audio={false}
-                height={350}
-                ref={this.setRef}
-                screenshotFormat="image/jpeg"
-                width={350}
-                videoConstraints={videoConstraints}
-                />
-                <button type="submit" className="btn btn-light btn-circle btn-xl" onClick={this.capture}>
-                <IoIcons.IoCamera size='medium'/>
-                </button>
-            </form>
-            </div>
+                <div className="auth-inner">
+                    <form className="cameraFrame" onSubmit={this.capture}>
+                        <Webcam
+                        audio={false}
+                        height={"80%"}
+                        ref={this.setRef}
+                        screenshotFormat="image/jpeg"
+                        width={"100%"}
+                        videoConstraints={videoConstraints}
+                        />
+                        <button type="submit" className="btn btn-light btn-circle btn-xl">
+                        <IoIcons.IoCamera size="70px"/>
+                        </button>
+                    </form>
+                </div>
             </div>
         )
     }
