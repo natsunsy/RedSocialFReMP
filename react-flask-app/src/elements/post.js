@@ -3,12 +3,27 @@ import React from "react";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-
+import CloseIcon from '@material-ui/icons/Close';
 import NearMeIcon from "@material-ui/icons/NearMe";
+import IconButton from '@material-ui/core/IconButton';
 import {ExpandMoreOutlined} from "@material-ui/icons";
+import { makeStyles } from '@material-ui/core/styles';
 import "./post.css";
 
-export default function Post({image, username, message,timestamp}) {
+const useStyles = makeStyles({
+    close: {
+      marginInlineStart:"auto",
+      padding:0,
+      marginBottom:"auto"
+    },
+  });
+
+
+export default function Post({id,userId,image, username, message,timestamp,handleRemovePost}) {
+    const classes = useStyles();
+    const sessionStr = localStorage.getItem("session")
+    const sessionJson = JSON.parse(sessionStr)
+    const userIdStorage = sessionJson.user._id
     return (
     <div className="post">
         <div className="post__top">
@@ -18,15 +33,19 @@ export default function Post({image, username, message,timestamp}) {
                 <h3>{username}</h3>
                 <p>{timestamp}</p>
             </div>
+            {userId===userIdStorage &&
+            <IconButton aria-label="delete" className={classes.close} onClick={()=>handleRemovePost(id)}>
+                <CloseIcon />
+            </IconButton>
+            }
         </div>
-
-        <div className="post__bottom">
+        {message &&<div className="post__bottom">
             <p>{message}</p>
-        </div>
-
-        <div className="post__image">
+        </div>}
+        {image &&<div className="post__image">
             <img src={image} alt=""/>
-        </div>
+        </div>}
+        
 
         <div className="post__options">
             <div className="post__option">

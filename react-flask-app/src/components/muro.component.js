@@ -17,10 +17,10 @@ export default class Muro extends Component{
 
         this.state = {
             loggedIn,
-            post:{},
             posts:[]
         }
         this.handleAddPost.bind()
+        this.handleRemovePost.bind()
     }
 
     componentDidMount(){
@@ -42,11 +42,19 @@ export default class Muro extends Component{
           body: JSON.stringify(addPost),
           withCredentials: "include"
       }).then(res=>res.json()).then(data=>this.setState({
-        post: data.post,
         posts:[data.post,...this.state.posts]
       }))
       
     };
+
+    handleRemovePost= id =>{
+        const sessionStr = localStorage.getItem("session")
+        const sessionJson = JSON.parse(sessionStr)
+        const userId = sessionJson.user._id
+        fetch('/inicio/posts/'+userId+'/'+id,{method:'DELETE'})
+        const new_posts = this.state.posts.filter(post => post._id !== id)
+        this.setState({posts:new_posts})
+      }
 
     render(){
         if(!this.state.loggedIn){
@@ -54,10 +62,13 @@ export default class Muro extends Component{
         }
 
         const postList = this.state.posts.map(post =><Post key={post._id}
+                                                        id = {post._id}
+                                                        userId = {post.userId}
                                                         message={post.message}
                                                         timestamp={post.timestamp}
                                                         username={post.username}
                                                         image={post.imageUrl}
+                                                        handleRemovePost={this.handleRemovePost}
                                                     />)
         return(
             <div>

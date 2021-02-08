@@ -96,3 +96,10 @@ def get_posts(userId):
     posts.reverse()                                                                                                                                
     posts = JsonEncoder(posts)
     return {"posts":posts}
+
+@app.route('/inicio/posts/<userId>/<_id>',methods=['DELETE'])
+def delete_post(userId,_id):
+    userId = objectid.ObjectId(userId)
+    _id = objectid.ObjectId(_id)
+    db.db.post_collection.delete_one({"userId":userId,"_id":_id})
+    return {"post":{}}
