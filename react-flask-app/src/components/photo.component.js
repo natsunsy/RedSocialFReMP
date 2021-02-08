@@ -31,9 +31,10 @@ export default class Photo extends Component{
             withCredentials: "include"
         }).then(res=>res.json())
         .then(data=>{
-            console.log(data.feeling)
+            if(data)
+                localStorage.setItem("feeling", JSON.stringify(data.feeling))
         })
-        this.props.history.push("/inicio")
+        this.props.history.push("inicio")
       };
 
     render(){
