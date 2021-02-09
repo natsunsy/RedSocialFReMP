@@ -43,8 +43,11 @@ def sign_up():
 @app.route('/photo',methods=["POST"])
 def photo():
     image_from_web = json.loads(request.data)
-    feeling = predict_emotion(image_from_web["photo"])
-    return {"feeling":feeling}
+    if(image_from_web):
+        feeling = predict_emotion(image_from_web["photo"])
+        return {"feeling":feeling}
+    else:
+        return None
 
 @app.route('/diario/tareas/',methods=["POST"])
 def add_task():
