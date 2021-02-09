@@ -7,7 +7,7 @@ const useStyles = makeStyles(theme =>({
     avatar: {
         margin:"2%",
         [theme.breakpoints.down("sm")]:{
-            position:"fixed",
+            /*position:"fixed",*/
             margin:"3% 3%"}
     },
   }));
@@ -23,7 +23,7 @@ export default function MessageSender({handleAddPost}){
         e.preventDefault();
         handleAddPost({
             userId:user._id,
-            username:user.name+" "+user.lastname,
+            username:user.name,
             message:input,
             imageUrl:imageUrl,
             timestamp:new Date()
