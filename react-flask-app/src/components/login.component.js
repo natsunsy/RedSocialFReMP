@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import {Redirect} from "react-router-dom";
+import { GoogleLogin } from 'react-google-login';
 const validEmailRegex = RegExp(
     /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
   );
@@ -73,11 +74,38 @@ export default class Login extends Component {
     })
   }
   
+  signup(res) {
+        const googleresponse = {
+          name: res.profileObj.name,
+          email: res.profileObj.email,
+          token: res.googleId,
+          imageUrl: res.profileObj.imageUrl,
+          ProviderId: 'Google'
+        };
+        fetch("/sign-up",{
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify(googleresponse),
+          withCredentials: "include"}).then(res => res.json())
+          .then(data => {
+              localStorage.setItem("session", JSON.stringify(data))
+              this.setState({ 
+                  loggedIn:data.loggedIn
+                              })
+          })
+      };
+
   render() {
       if(this.state.loggedIn){
           return <Redirect to="/photo"/>
       }
       const {errors} = this.state;
+      const responseGoogle = (response) => {
+        console.log(response)
+        this.signup(response);
+      }
         return (
             <div className="auth-wrapper">
             <div className="auth-inner">
@@ -99,14 +127,19 @@ export default class Login extends Component {
                 
                 <hr></hr>
 
-                <div id="gSignInWrapper">
-                    <div id="customBtn" className="customGPlusSignIn">
+                <GoogleLogin
+                    clientId="500851683132-i0mk7s0dk3sp8ksh4boqndodb07b00di.apps.googleusercontent.com"
+                    render={renderProps => (
+                      <button id="customBtn" onClick={renderProps.onClick} disabled={renderProps.disabled}>
                         <span className="icon"></span>
                         <span className="buttonText">Iniciar Sesión con Google</span>
-                    </div>
-                </div>
-                <div id="name"></div>
-                <script>startApp();</script>
+                      </button>
+                    )}
+                    buttonText="Iniciar Sesión con Google"
+                    onSuccess={responseGoogle}
+                    onFailure={responseGoogle}
+                    cookiePolicy={'single_host_origin'}
+                  />
                 {this.state.loggedIn && <div name="success" className={this.state.classStyle} role="alert">
                     {this.state.message}
                 </div>}
