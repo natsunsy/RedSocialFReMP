@@ -52,10 +52,15 @@ def sign_up():
 
 @app.route('/photo',methods=["POST"])
 def photo():
-    image_from_web = json.loads(request.data)
+    data = json.loads(request.data)
+    userId = objectid.ObjectId(data["userId"])
+    image_from_web = data["photo"]
     if(image_from_web):
-        feeling = predict_emotion(image_from_web["photo"])
-        return {"feeling":feeling}
+        feeling = predict_emotion(image_from_web)
+        db.db.usuario_collection.update_one({"_id":userId},{"$set":{"feeling":feeling}})
+        user = db.db.usuario_collection.find_one({"_id":userId})
+        user = JsonEncodeOne(user)
+        return {"loggedIn":True,"user":user}
     else:
         return None
 
