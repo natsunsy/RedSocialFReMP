@@ -19,9 +19,12 @@
 .post__topInfo{
     text-align: left;
 }
-.post__topInfo > h3 {
+.post__topInfo > a {
+    font-weight: 500;
+    font-family: 'Fira Sans', sans-serif;
     font-size: medium;
     margin-bottom: 0;
+    color: black;
 }
 
 .post__bottom {

@@ -50,7 +50,7 @@ export default function Post({id,userId,image, username, message,timestamp,handl
         <div className="post__top">
             <BadgeAvatar className="post__avatar"/>
             <div className="post__topInfo">
-                <h3>{username}</h3>
+                <a href={`/perfil/${userId}`}>{username}</a>
                 <div className={classes.tooltip}>
                 <ReactTimeAgo className={classes.timestamp} date={timestamp} locale="es-PE" wrapperComponent={TooltipContainer} tooltip={false}/>
                 </div>
