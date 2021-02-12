@@ -1,11 +1,9 @@
 import React from "react";
 import ThumbUpIcon from "@material-ui/icons/ThumbUp";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
-import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import CloseIcon from '@material-ui/icons/Close';
 import NearMeIcon from "@material-ui/icons/NearMe";
 import IconButton from '@material-ui/core/IconButton';
-import {ExpandMoreOutlined} from "@material-ui/icons";
 import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types'
 import Tooltip from 'react-responsive-ui/commonjs/Tooltip'
@@ -83,10 +81,6 @@ export default function Post({id,userId,image, username, message,timestamp,handl
             <div className="post__option">
                 <NearMeIcon />
                 <p>Compartir</p>
-            </div>
-            <div className="post__option">
-                <AccountCircleIcon />
-                <ExpandMoreOutlined />
             </div>
         </div>
     </div>

@@ -10,35 +10,6 @@ import MOLESTO from "../static/MOLESTO.png";
 import NEUTRAL from "../static/NEUTRAL.png";
 import SORPRENDIDO from "../static/SORPRENDIDO.png";
 import TRISTE from "../static/TRISTE.png";
-/*
-const StyledBadge = withStyles((theme) => ({
-  badge: {
-    backgroundColor: '#44b700',
-    color: '#44b700',
-    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
-    '&::after': {
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      borderRadius: '50%',
-      animation: '$ripple 1.2s infinite ease-in-out',
-      border: '1px solid currentColor',
-      content: '""',
-    },
-  },
-  '@keyframes ripple': {
-    '0%': {
-      transform: 'scale(.8)',
-      opacity: 1,
-    },
-    '100%': {
-      transform: 'scale(2.4)',
-      opacity: 0,
-    },
-  },
-}))(Badge);*/
 
 const SmallAvatar = withStyles((theme) => ({
   root: {
@@ -60,6 +31,9 @@ const useStyles = makeStyles((theme) => ({
 export default function BadgeAvatar() {
   const classes = useStyles();
   const [src, setSrc] = useState("")
+  const sessionStr = localStorage.getItem("session")
+  const sessionJson = JSON.parse(sessionStr)
+  const user = sessionJson.user
 
   useEffect(() => {
   const feelingStr = localStorage.getItem("feeling")
@@ -101,7 +75,7 @@ export default function BadgeAvatar() {
         }}
         badgeContent={<SmallAvatar src={src} />}
       >
-        <Avatar src="https://scontent.flim11-1.fna.fbcdn.net/v/t1.0-9/130249199_4085934954754163_3099918067762144354_n.jpg?_nc_cat=101&ccb=2&_nc_sid=09cbfe&_nc_eui2=AeHQfj-ySbhveZyUGvRhOKopRs1cdnmMOm9GzVx2eYw6b2-aJ_wuroadDOfGAB7a8Pff-r76GyKzGMExSxFU20jR&_nc_ohc=MXzxM-zn6IAAX8-bXQn&_nc_ht=scontent.flim11-1.fna&oh=1f9a0965813770f603b008be42eeb9ba&oe=602CCDBE" />
+        <Avatar src={user.imageUrl} />
       </Badge>
     </div>
   );

@@ -4,7 +4,18 @@ import { Link } from 'react-router-dom';
 import { SidebarData } from './sidebardata';
 import { IconContext } from 'react-icons';
 import { Avatar } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 import './navbar.css';
+
+const ProfileAvatar = withStyles({
+    root: {
+      width: "40%",
+      height: "40%",
+      margin:"auto",
+      marginTop:"20%",
+      marginBottom:"2%"
+    },
+  })(Avatar);
 
 export default function Navbar({title}){
     const [sidebar, setSidebar] = useState(false);
@@ -31,8 +42,8 @@ export default function Navbar({title}){
                 
                 <ul className='nav-menu-items' onClick={showSidebar}>
                     <div className="profile-info">
-                        <div className="avatar">
-                        <Avatar src="https://scontent.flim11-1.fna.fbcdn.net/v/t1.0-9/130249199_4085934954754163_3099918067762144354_n.jpg?_nc_cat=101&ccb=2&_nc_sid=09cbfe&_nc_eui2=AeHQfj-ySbhveZyUGvRhOKopRs1cdnmMOm9GzVx2eYw6b2-aJ_wuroadDOfGAB7a8Pff-r76GyKzGMExSxFU20jR&_nc_ohc=MXzxM-zn6IAAX8-bXQn&_nc_ht=scontent.flim11-1.fna&oh=1f9a0965813770f603b008be42eeb9ba&oe=602CCDBE"/></div>
+                        
+                        <ProfileAvatar src={user.imageUrl}/>
                         <h4>{user.labor}</h4>
                     </div>
                     {SidebarData.map((item,index) => {
