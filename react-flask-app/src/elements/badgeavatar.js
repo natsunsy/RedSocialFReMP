@@ -28,17 +28,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function BadgeAvatar() {
+export default function BadgeAvatar({feeling}) {
   const classes = useStyles();
   const [src, setSrc] = useState("")
   const sessionStr = localStorage.getItem("session")
   const sessionJson = JSON.parse(sessionStr)
   const user = sessionJson.user
 
-  useEffect(() => {
-  const feelingStr = localStorage.getItem("feeling")
-  const feeling = JSON.parse(feelingStr)
-  
+  useEffect(() => {  
   switch(feeling){
     case 'feliz':
       setSrc(FELIZ)
@@ -63,7 +60,7 @@ export default function BadgeAvatar() {
       break;
     default:
       break;
-  }},[]);
+  }},[feeling]);
 
   return (
     <div className={classes.root}>

@@ -76,6 +76,7 @@ export default class Muro extends Component{
                                                         timestamp={post.timestamp}
                                                         username={post.username}
                                                         image={post.imageUrl}
+                                                        feeling={post.feeling}
                                                         handleRemovePost={this.handleRemovePost}
                                                     />)
         return(

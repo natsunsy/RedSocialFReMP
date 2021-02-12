@@ -21,7 +21,9 @@ export default class Photo extends Component{
     
     capture = () => {
         const imageSrc = this.webcam.getScreenshot();
-        const photo = {photo:imageSrc}
+        const sessionStr = localStorage.getItem("session")
+        const sessionJson = JSON.parse(sessionStr)
+        const photo = {userId:sessionJson.user._id,photo:imageSrc}
         fetch("/photo",{
             method: "POST",
             headers: {
@@ -31,8 +33,7 @@ export default class Photo extends Component{
             withCredentials: "include"
         }).then(res=>res.json())
         .then(data=>{
-            if(data)
-                localStorage.setItem("feeling", JSON.stringify(data.feeling))
+            localStorage.setItem("session", JSON.stringify(data))
         })
         this.props.history.push("inicio")
       };

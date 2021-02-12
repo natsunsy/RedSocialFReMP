@@ -38,7 +38,7 @@ TooltipContainer.propTypes = {
     children: PropTypes.node.isRequired
   }
 
-export default function Post({id,userId,image, username, message,timestamp,handleRemovePost}) {
+export default function Post({id,userId,image, username, message,timestamp,handleRemovePost,feeling}) {
     const classes = useStyles();
     const sessionStr = localStorage.getItem("session")
     const sessionJson = JSON.parse(sessionStr)
@@ -48,7 +48,7 @@ export default function Post({id,userId,image, username, message,timestamp,handl
     return (
     <div className="post">
         <div className="post__top">
-            <BadgeAvatar className="post__avatar"/>
+            <BadgeAvatar feeling={feeling} className="post__avatar"/>
             <div className="post__topInfo">
                 <a href={`/perfil/${userId}`}>{username}</a>
                 <div className={classes.tooltip}>

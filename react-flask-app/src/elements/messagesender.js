@@ -24,7 +24,8 @@ export default function MessageSender({handleAddPost}){
             username:user.name,
             message:input,
             imageUrl:imageUrl,
-            timestamp:new Date()
+            timestamp:new Date(),
+            feeling:user.feeling
         })
         setInput("")
         setImageUrl("")
