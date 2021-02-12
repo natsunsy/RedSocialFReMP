@@ -35,9 +35,19 @@ def sign_in():
 def sign_up():
     new_user = json.loads(request.data)
     if db.db.usuario_collection.find_one({"email":new_user["email"]}):
-        return {"message": "Ya existe una cuenta con el correo que has usado. Por favor, intente con otro correo.","classStyle":"alert alert-danger"}
+        if "token" in new_user:
+            db.db.usuario_collection.update_one({"email":new_user["email"]},{"$set":{"token":new_user["token"]}})
+            new_user = db.db.usuario_collection.find_one({"email":new_user["email"]})
+            new_user =  JsonEncodeOne(new_user)
+            return {"loggedIn":True, "user":new_user}
+        else:
+            return {"message": "Ya existe una cuenta con el correo que has usado. Por favor, intente con otro correo.","classStyle":"alert alert-danger"}
     else:
         db.db.usuario_collection.insert_one(new_user)
+        if "token" in new_user:
+            new_user = db.db.usuario_collection.find_one({"email":new_user["email"]})
+            new_user =  JsonEncodeOne(new_user)
+            return {"loggedIn":True, "user":new_user}
         return {"message": "¡Te has registrado con éxito! ","classStyle":"alert alert-success"}
 
 @app.route('/photo',methods=["POST"])
@@ -106,3 +116,10 @@ def delete_post(userId,_id):
     _id = objectid.ObjectId(_id)
     db.db.post_collection.delete_one({"userId":userId,"_id":_id})
     return {"post":{}}
+
+@app.route('/perfil/<userId>',methods=['GET'])
+def get_user(userId):
+    userId = objectid.ObjectId(userId)
+    user = db.db.usuario_collection.find_one({"_id":userId})
+    user = JsonEncodeOne(user)
+    return {"user":user}

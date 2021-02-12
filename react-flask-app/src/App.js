@@ -23,7 +23,7 @@ export default class App extends Component {
                 <Route path="/photo" component={Photo}/>
                 <Route path="/inicio" component={Muro} />
                 <Route path="/diario" component={Diario} />
-                <Route path="/perfil" component={Perfil}/>
+                <Route path="/perfil/:userId" component={Perfil}/>
               </Switch>
         </div>
       </Router>
