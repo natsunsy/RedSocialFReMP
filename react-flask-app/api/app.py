@@ -128,3 +128,29 @@ def get_user(userId):
     user = db.db.usuario_collection.find_one({"_id":userId})
     user = JsonEncodeOne(user)
     return {"user":user}
+
+@app.route('/personas',methods=['GET'])
+def get_users():
+    users = [user for user in db.db.usuario_collection.find()]
+    users = JsonEncoder(users)
+    return {"users":users}
+
+@app.route('/users/<userId>/friends/',methods=['POST'])
+def add_friend(userId):
+    friend = json.loads(request.data)
+    if friend["status"] == "pendiente":
+        friend_request = {"id":userId,"status":"por confirmar"}
+        db.db.usuario_collection.update({"_id":objectid.ObjectId(userId)},{"$addToSet":{"friends":friend}})
+        db.db.usuario_collection.update({"_id":objectid.ObjectId(friend["id"])},{"$addToSet":{"friends":friend_request}})
+    elif friend["status"] == "amigos":
+        db.db.usuario_collection.update_one({"_id":objectid.ObjectId(userId),"friends.id":friend["id"]},{"$set":{"friends.$.status":friend["status"]}})
+        db.db.usuario_collection.update_one({"_id":objectid.ObjectId(friend["id"]),"friends.id":userId},{"$set":{"friends.$.status":friend["status"]}})
+    user = JsonEncodeOne(db.db.usuario_collection.find_one({"_id":objectid.ObjectId(userId)}))
+    return {"loggedIn":True,"user":user}
+
+@app.route('/users/<userId>/friends/<friendId>/',methods=['DELETE'])
+def delete_friend(userId,friendId):
+    db.db.usuario_collection.update({"_id":objectid.ObjectId(userId)},{"$pull":{"friends":{"id":friendId}}})
+    db.db.usuario_collection.update({"_id":objectid.ObjectId(friendId)},{"$pull":{"friends":{"id":userId}}})
+    user = JsonEncodeOne(db.db.usuario_collection.find_one({"_id":objectid.ObjectId(userId)}))
+    return {"loggedIn":True,"user":user}

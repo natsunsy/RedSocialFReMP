@@ -68,7 +68,7 @@ export default class SignUp extends Component {
 
       handleSubmit = async event => {
         event.preventDefault();
-        const new_user = {name:this.state.name+" "+this.state.lastname, email:this.state.email, password:this.state.password, labor:"", imageUrl:""};
+        const new_user = {name:this.state.name+" "+this.state.lastname, email:this.state.email, password:this.state.password, labor:"", imageUrl:"",friends:[]};
         await fetch("/sign-up",{
             method: "POST",
             headers: {

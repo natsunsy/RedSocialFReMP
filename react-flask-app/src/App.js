@@ -10,6 +10,7 @@ import Login from './components/login.component';
 import Muro from './components/muro.component';
 import Diario from './components/diario.component';
 import Perfil from './components/perfil.component';
+import People from './components/people.component';
 
 export default class App extends Component {
   render(){
@@ -24,6 +25,7 @@ export default class App extends Component {
                 <Route path="/inicio" component={Muro} />
                 <Route path="/diario" component={Diario} />
                 <Route path="/perfil/:userId" component={Perfil}/>
+                <Route path="/personas" component={People}/>
               </Switch>
         </div>
       </Router>

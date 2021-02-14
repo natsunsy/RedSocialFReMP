@@ -80,7 +80,8 @@ export default class Login extends Component {
           email: res.profileObj.email,
           token: res.googleId,
           imageUrl: res.profileObj.imageUrl,
-          ProviderId: 'Google'
+          ProviderId: 'Google',
+          friends:[]
         };
         fetch("/sign-up",{
           method: "POST",
