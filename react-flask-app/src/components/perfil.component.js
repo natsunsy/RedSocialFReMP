@@ -5,8 +5,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Header from '../elements/header'
 const ProfileAvatar = withStyles({
     root: {
-      width: "40%",
-      height: "40%",
+      width: "140px",
+      height: "140px",
       margin:"auto",
       marginTop:"20%",
       marginBottom:"2%"
@@ -31,18 +31,27 @@ export default class Perfil extends Component {
     }
 
     componentDidMount(){
-        const { userId } = this.props.match.params
-        fetch("/perfil/"+userId,{method:'GET'}).then(res=>res.json())
+        const userId = this.props.match.params.userId
+        fetch("/perfil/"+userId).then(res=>res.json())
         .then(data=>this.setState(
             {name:data.user.name,
              imageUrl:data.user.imageUrl}))
+    }
+
+    componentDidUpdate(prevProps){
+        if (prevProps.match.params.userId !== this.props.match.params.userId){
+            const userId = this.props.match.params.userId
+            fetch("/perfil/"+userId).then(res=>res.json())
+            .then(data=>this.setState(
+                    {name:data.user.name,
+                    imageUrl:data.user.imageUrl}))
+        }
     }
 
     render(){
         if(!this.state.loggedIn){
             return <Redirect to = "/"/>
         }
-    
         return(
             
             <div>

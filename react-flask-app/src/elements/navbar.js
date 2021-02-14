@@ -55,7 +55,7 @@ export default function Navbar({title}){
                             </Link>
                         </li>
                     )
-                })}
+                    })}
                 </ul>
             </nav>
         </IconContext.Provider>
