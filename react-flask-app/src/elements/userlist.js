@@ -136,8 +136,6 @@ export default function UserList(props) {
         user.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setSearchResults(results);
-      // console.log("socket log: "+users)
-     // setUsers(users)
     })
     socket.emit('users',users)
   }, [users]);
