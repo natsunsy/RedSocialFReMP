@@ -132,10 +132,13 @@ export default function UserList(props) {
     );
     setSearchResults(results);
     socket.on("usersResponse",users => {
-      console.log("socket log: "+users)
-      //setUsers(users)
+      const results = users.filter(user =>
+        user.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setSearchResults(results);
+      // console.log("socket log: "+users)
+     // setUsers(users)
     })
-    console.log("Fuera del socket log: "+users)
     socket.emit('users',users)
   }, [users]);
 
