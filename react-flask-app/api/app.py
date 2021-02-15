@@ -4,8 +4,10 @@ import db
 from emotion_recognition import predict_emotion
 import datetime
 from flask_socketio import SocketIO, emit
+from flask_bcrypt import Bcrypt
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
+bcrypt = Bcrypt(app)
 
 def JsonEncoder(mongoArray):
     for obj in mongoArray:
@@ -28,7 +30,7 @@ def sign_in():
     if not existent_user:
         return {"loggedIn":False,"message": "El correo no existe. Por favor, intente con otro correo.","classStyle":"alert alert-danger"}
     else:
-        if user["password"] == existent_user["password"]:
+        if bcrypt.check_password_hash(existent_user["password"], user["password"]) :
             return {"loggedIn":True, "user":existent_user}
         else:
             return {"loggedIn":False,"message": "Contraseña incorrecta.","classStyle":"alert alert-danger"}
