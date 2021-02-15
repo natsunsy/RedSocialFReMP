@@ -3,6 +3,7 @@ import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { Avatar, IconButton, Tooltip } from '@material-ui/core';
 import { HiUserAdd, HiUserRemove } from "react-icons/hi";
 import { RiMessageFill } from "react-icons/ri";
+import io from "socket.io-client";
 
 const UserListAvatar = withStyles({
     root: {
@@ -103,7 +104,7 @@ const useStyles = makeStyles({
         width:"inherit"
     }
   });
-
+let socket = io.connect("http://localhost:5000");
 export default function UserList(props) {
  const [searchTerm, setSearchTerm] = useState("");
  const [searchResults, setSearchResults] = useState([]);
@@ -130,8 +131,12 @@ export default function UserList(props) {
       user.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setSearchResults(results);
-    const {user} = props
-    console.log(user)
+    socket.on("usersResponse",users => {
+      console.log("socket log: "+users)
+      //setUsers(users)
+    })
+    console.log("Fuera del socket log: "+users)
+    socket.emit('users',users)
   }, [users]);
 
   useEffect(() => {

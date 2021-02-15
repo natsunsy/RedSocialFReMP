@@ -3,7 +3,9 @@ from bson import json_util,objectid
 import db
 from emotion_recognition import predict_emotion
 import datetime
+from flask_socketio import SocketIO, emit
 app = Flask(__name__)
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 def JsonEncoder(mongoArray):
     for obj in mongoArray:
@@ -134,6 +136,10 @@ def get_users():
     users = [user for user in db.db.usuario_collection.find()]
     users = JsonEncoder(users)
     return {"users":users}
+
+@socketio.on('users')
+def handle_users(users):
+    emit('usersResponse',users,broadcast=True)
 
 @app.route('/users/<userId>/friends/',methods=['POST'])
 def add_friend(userId):
