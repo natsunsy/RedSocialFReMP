@@ -26,25 +26,50 @@ export default class Perfil extends Component {
         this.state = {
             loggedIn,
             name:'',
-            imageUrl:''
+            imageUrl:'',
+            dates:[]
         }
     }
 
     componentDidMount(){
         const userId = this.props.match.params.userId
+        const sessionStr = localStorage.getItem("session")
+        const sessionJson = JSON.parse(sessionStr)
         fetch("/perfil/"+userId).then(res=>res.json())
-        .then(data=>this.setState(
+        .then(data=>{
+        if(userId !==sessionJson.user._id){
+        this.setState(
             {name:data.user.name,
-             imageUrl:data.user.imageUrl}))
+             imageUrl:data.user.imageUrl})}
+        else{
+            this.setState({
+                name:data.user.name,
+                imageUrl:data.user.imageUrl,
+                dates:data.dates
+            })
+        }
+        })
     }
 
     componentDidUpdate(prevProps){
+        const sessionStr = localStorage.getItem("session")
+        const sessionJson = JSON.parse(sessionStr)
         if (prevProps.match.params.userId !== this.props.match.params.userId){
             const userId = this.props.match.params.userId
             fetch("/perfil/"+userId).then(res=>res.json())
-            .then(data=>this.setState(
+            .then(data=>{
+                if(userId !==sessionJson.user._id){
+                this.setState(
                     {name:data.user.name,
-                    imageUrl:data.user.imageUrl}))
+                     imageUrl:data.user.imageUrl})}
+                else{
+                    this.setState({
+                        name:data.user.name,
+                        imageUrl:data.user.imageUrl,
+                        dates:data.dates
+                    })
+                }
+                })
         }
     }
 
@@ -61,6 +86,9 @@ export default class Perfil extends Component {
                         <div className="profile-info">
                             <ProfileAvatar src={this.state.imageUrl}/>
                             <h4>{this.state.name}</h4>
+                            <ul>
+                                {this.state.dates.map(date => <li>{date._id}</li>)}
+                            </ul>
                         </div>
                     </div>
                 </div>
