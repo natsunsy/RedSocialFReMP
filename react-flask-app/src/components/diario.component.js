@@ -85,11 +85,15 @@ handleUpdateItem=id=>{
         return(
           <>
             <Navbar title="Diario"/>
-            <div className = {styles.todayLabel}>Hoy</div>
-            
-            <div className={styles.question}>{title}</div>          
-            <FormToDo handleAddItem={this.handleAddItem} placeholder={placeholder} styles={styles} done={done} date={this.state.date}/>
-            <TaskList handleUpdateItem={this.handleUpdateItem} handleRemoveItem={this.handleRemoveItem} task={this.state.task} date={this.state.date} styles={styles}/>
+            <div className="inicio">
+              <div className={styles.journal}>
+                <div className = {styles.todayLabel}>Hoy</div>
+                
+                <div className={styles.question}>{title}</div>
+                <FormToDo handleAddItem={this.handleAddItem} placeholder={placeholder} styles={styles} done={done} date={this.state.date}/>
+                <TaskList handleUpdateItem={this.handleUpdateItem} handleRemoveItem={this.handleRemoveItem} task={this.state.task} date={this.state.date} styles={styles}/>
+              </div>
+            </div>
           </>
         )
     }
