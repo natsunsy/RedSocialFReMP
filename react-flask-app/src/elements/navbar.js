@@ -9,6 +9,7 @@ import List from '@material-ui/core/List';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
+import { IconContext } from 'react-icons';
 import { makeStyles, useTheme, withStyles } from '@material-ui/core/styles';
 import { Avatar } from '@material-ui/core';
 import { SidebarData } from './sidebardata';
@@ -117,8 +118,8 @@ function Navbar(props) {
       <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
+        <IconContext.Provider value={{ color: '#000' }}>
           <IconButton
-            color="black"
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
@@ -126,6 +127,7 @@ function Navbar(props) {
           >
             <MenuIcon />
           </IconButton>
+          </IconContext.Provider>
           <Typography noWrap>
           <span className={classes.title}>{props.title}</span>
           </Typography>
