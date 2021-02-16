@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
-import Header from '../elements/header'
+import Navbar from '../elements/navbar'
 import UserList from '../elements/userlist'
 
 export default class People extends Component {
@@ -57,7 +57,7 @@ export default class People extends Component {
         }
         return (
             <div>
-                <Header title="Personas"/>
+                <Navbar title="Personas"/>
                 <div className="inicio">
                     <div className="feed">
                         <UserList user={this.state.user} add_friend={this.add_friend} remove_friend={this.remove_friend}/>

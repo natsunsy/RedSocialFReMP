@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom/cjs/react-router-dom";
-import Header from "../elements/header";
+import Navbar from "../elements/navbar";
 import FormToDo from "../elements/formtodo";
 import TaskList from "../elements/tasklist";
 import styles from './diario.module.css'
@@ -84,7 +84,7 @@ handleUpdateItem=id=>{
 
         return(
           <>
-            <Header title="Diario"/>
+            <Navbar title="Diario"/>
             <div className = {styles.todayLabel}>Hoy</div>
             
             <div className={styles.question}>{title}</div>          

@@ -130,7 +130,7 @@ def delete_post(userId,_id):
 def get_user(userId):
     userId = objectid.ObjectId(userId)
     user = db.db.usuario_collection.find_one({"_id":userId})
-    completed_tasks_dates = [date for date in db.db.diario_collection.aggregate([{"$group":{"_id":"$date"}},{"$sort":{"_id":-1}}])]
+    completed_tasks_dates = [date for date in db.db.diario_collection.aggregate([{"$match":{"userId":userId}},{"$group":{"_id":"$date"}},{"$sort":{"_id":-1}}])]
     user = JsonEncodeOne(user)
     return {"user":user,"dates":completed_tasks_dates}
 
