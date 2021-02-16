@@ -134,6 +134,20 @@ def get_user(userId):
     user = JsonEncodeOne(user)
     return {"user":user,"dates":completed_tasks_dates}
 
+@app.route('/perfil/<userId>',methods=['POST'])
+def update_user(userId):
+    data = json.loads(request.data)
+    userId = objectid.ObjectId(userId)
+    if data["labor"] and data["imageUrl"]:
+        db.db.usuario_collection.update_one({"_id":userId},{"$set":{"labor":data["labor"],"imageUrl":data["imageUrl"]}})
+    elif not data["labor"]:
+        db.db.usuario_collection.update_one({"_id":userId},{"$set":{"imageUrl":data["imageUrl"]}})
+    elif not data["imageUrl"]:
+        db.db.usuario_collection.update_one({"_id":userId},{"$set":{"labor":data["labor"]}})
+    user = db.db.usuario_collection.find_one({"_id":userId})
+    user = JsonEncodeOne(user)
+    return {"loggedIn":True,"user":user}
+
 @app.route('/personas',methods=['GET'])
 def get_users():
     users = [user for user in db.db.usuario_collection.find()]

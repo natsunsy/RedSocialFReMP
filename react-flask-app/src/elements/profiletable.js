@@ -84,10 +84,9 @@ TablePaginationActions.propTypes = {
 const useStyles2 = makeStyles(theme => ({
   root: {
     width: '100%',
-    marginTop: theme.spacing(3),
   },
   table: {
-    
+    backgroundColor:"#73C0B0",
   },
   tableWrapper: {
     overflowX: 'auto',

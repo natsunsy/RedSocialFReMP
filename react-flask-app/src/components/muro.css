@@ -7,6 +7,10 @@
     align-items: center;
     width: 100%;
 }
+#h6{
+    align-self: flex-start;
+    margin-top: 5%;
+}
 /*por ahora:*/
 @media (min-width:1200px){
     .inicio{

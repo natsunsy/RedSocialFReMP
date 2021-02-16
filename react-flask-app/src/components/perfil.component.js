@@ -4,6 +4,7 @@ import { Redirect } from 'react-router-dom'
 import { withStyles } from '@material-ui/core/styles';
 import ProfileTable from '../elements/profiletable';
 import Navbar from '../elements/navbar';
+import EditProfileButton from '../elements/editprofile';
 const ProfileAvatar = withStyles({
     root: {
       width: "140px",
@@ -27,18 +28,18 @@ export default class Perfil extends Component {
         this.state = {
             loggedIn,
             name:'',
+            user:sessionJson.user,
             imageUrl:'',
             dates:[]
         }
+        this.updateProfile.bind()
     }
 
     componentDidMount(){
         const userId = this.props.match.params.userId
-        const sessionStr = localStorage.getItem("session")
-        const sessionJson = JSON.parse(sessionStr)
         fetch("/perfil/"+userId).then(res=>res.json())
         .then(data=>{
-        if(userId !==sessionJson.user._id){
+        if(userId !==this.state.user._id){
         this.setState(
             {name:data.user.name,
              imageUrl:data.user.imageUrl})}
@@ -59,7 +60,7 @@ export default class Perfil extends Component {
             const userId = this.props.match.params.userId
             fetch("/perfil/"+userId).then(res=>res.json())
             .then(data=>{
-                if(userId !==sessionJson.user._id){
+                if(userId !==this.state.user._id){
                 this.setState(
                     {name:data.user.name,
                      imageUrl:data.user.imageUrl})}
@@ -74,6 +75,20 @@ export default class Perfil extends Component {
         }
     }
 
+    updateProfile = (labor,imageUrl) => {
+        fetch(`/perfil/${this.state.user._id}`,
+            {method:'POST',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({"labor":labor,"imageUrl":imageUrl}),
+            withCredentials: "include"
+            }).then(res=>res.json())
+            .then(data=>{
+                localStorage.setItem("session", JSON.stringify(data))
+                this.setState({user:data.user})
+            })
+    }
     render(){
         if(!this.state.loggedIn){
             return <Redirect to = "/"/>
@@ -84,12 +99,14 @@ export default class Perfil extends Component {
                 <Navbar title="Perfil"/>
                 <div className="inicio">
                     <div className="feed">
-                        
-                            <ProfileAvatar src={this.state.imageUrl}/>
-                            <h4>{this.state.name}</h4>
-                            {this.props.match.params.userId==JSON.parse(localStorage.getItem("session")).user._id && 
-                            <ProfileTable dates={this.state.dates}/>}                            
-                        
+                        <ProfileAvatar src={this.state.imageUrl}/>
+                        <h4>{this.state.name}</h4>
+                        {this.props.match.params.userId==JSON.parse(localStorage.getItem("session")).user._id && 
+                        <>
+                        <EditProfileButton updateProfile={this.updateProfile}/>
+                        <h6 id="h6">Tu actividad:</h6>
+                        <ProfileTable dates={this.state.dates}/>
+                        </>}                    
                     </div>
                 </div>
             </div>
