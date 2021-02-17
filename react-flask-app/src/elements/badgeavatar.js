@@ -28,12 +28,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function BadgeAvatar({feeling}) {
+export default function BadgeAvatar({feeling,userImageUrl}) {
   const classes = useStyles();
   const [src, setSrc] = useState("")
-  const sessionStr = localStorage.getItem("session")
-  const sessionJson = JSON.parse(sessionStr)
-  const user = sessionJson.user
 
   useEffect(() => {  
   switch(feeling){
@@ -72,7 +69,7 @@ export default function BadgeAvatar({feeling}) {
         }}
         badgeContent={<SmallAvatar src={src} />}
       >
-        <Avatar src={user.imageUrl} />
+        <Avatar src={userImageUrl} />
       </Badge>
     </div>
   );

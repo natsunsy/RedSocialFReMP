@@ -114,7 +114,13 @@ def add_post():
 @app.route('/inicio/posts/<userId>/',methods=['GET'])
 def get_posts(userId):
     userId = objectid.ObjectId(userId)
-    posts = [post for post in db.db.post_collection.find({"userId":userId})]
+    obj_ids =[]
+    obj_ids.append(userId)
+    for friend in db.db.usuario_collection.find({"_id":userId,"friends.status":"amigos"},{"friends.id":1,"_id":0}):
+        friends = friend
+        for uId in friends['friends']:
+            obj_ids.append(objectid.ObjectId(uId['id']))
+    posts = [post for post in db.db.post_collection.find({"userId":{"$in":obj_ids}})]
     posts.reverse()                                                                                                                                
     posts = JsonEncoder(posts)
     return {"posts":posts}
