@@ -7,6 +7,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import FormControl from '@material-ui/core/FormControl';
 import { TextField } from '@material-ui/core';
+import io from "socket.io-client";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -18,12 +19,13 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 120,
   },
 }));
-
-export default function EditProfileButton({updateProfile}) {
+let socket = io.connect("http://localhost:5000");
+export default function EditProfileButton({updateProfile,user}) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
-  const [labor, setLabor] = React.useState('');
-  const [imageUrl, setImageUrl] = React.useState('');
+  const [labor, setLabor] = React.useState(user.labor);
+  const [imageUrl, setImageUrl] = React.useState(user.imageUrl);
+  const [users,setUsers] = React.useState([]);
 
   const handleChangeLabor = (event) => {
     setLabor(event.target.value);
@@ -43,23 +45,24 @@ export default function EditProfileButton({updateProfile}) {
 
   const handleUpdate = () => {
     updateProfile(labor,imageUrl)
-    setImageUrl("")
-    setLabor("")
+    fetch("/personas",{method:'GET'}).then(res=>res.json())
+        .then(data=>setUsers(data.users))
+    socket.emit('users',users)
     setOpen(false)
   }
 
   return (
     <div>
       <Button onClick={handleClickOpen}>Editar perfil</Button>
-      <Dialog disableBackdropClick disableEscapeKeyDown open={open} onClose={handleClose}>
+      <Dialog disableEscapeKeyDown open={open} onClose={handleClose}>
         <DialogTitle>Edita tu perfil:</DialogTitle>
         <DialogContent>
           <form className={classes.container}>
             <FormControl className={classes.formControl}>
-              <TextField label="Url foto de perfil" variant="outlined" onChange={handleChangeImageUrl}/>
+              <TextField label="Url foto de perfil" variant="outlined" value={imageUrl} onChange={handleChangeImageUrl}/>
             </FormControl>
             <FormControl className={classes.formControl}>
-                <TextField label="Ocupación" variant="outlined" onChange={handleChangeLabor}/>
+                <TextField label="Ocupación" variant="outlined" value={labor} onChange={handleChangeLabor}/>
             </FormControl>
           </form>
         </DialogContent>

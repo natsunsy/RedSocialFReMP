@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Redirect } from 'react-router-dom'
 import Navbar from '../elements/navbar'
 import UserList from '../elements/userlist'
+import io from "socket.io-client";
 
 export default class People extends Component {
     constructor(props){
@@ -16,16 +17,23 @@ export default class People extends Component {
 
         this.state = {
             loggedIn,
-            user:{}
+            user:{},
+            users:[]
         }
         this.add_friend.bind()
         this.remove_friend.bind()
+    }
+
+    componentDidMount(){
+        fetch("/personas",{method:'GET'}).then(res=>res.json())
+        .then(data=>this.setState({users:data.users}))
     }
 
     add_friend = friend=>{
         const sessionStr = localStorage.getItem("session")
         const sessionJson = JSON.parse(sessionStr)
         const userId = sessionJson.user._id
+        let socket = io.connect("http://localhost:5000");
         fetch(`/users/${userId}/friends/`,{
             method: "POST",
             headers: {
@@ -38,17 +46,24 @@ export default class People extends Component {
             localStorage.setItem("session", JSON.stringify(data))
             this.setState({user:data.user})
         })
+        fetch("/personas",{method:'GET'}).then(res=>res.json())
+        .then(data=>this.setState({users:data.users}))
+        socket.emit('users',this.state.users)
       }
     
     remove_friend = friendId =>{
         const sessionStr = localStorage.getItem("session")
         const sessionJson = JSON.parse(sessionStr)
         const userId = sessionJson.user._id
+        let socket = io.connect("http://localhost:5000");
         fetch(`/users/${userId}/friends/${friendId}/`,{method: "DELETE"}).then(res=>res.json())
         .then(data => {
             localStorage.setItem("session", JSON.stringify(data))
             this.setState({user:{}})
         })
+        fetch("/personas",{method:'GET'}).then(res=>res.json())
+        .then(data=>this.setState({users:data.users}))
+        socket.emit('users',this.state.users)
       }
 
     render() {
@@ -60,7 +75,7 @@ export default class People extends Component {
                 <Navbar title="Personas"/>
                 <div className="inicio">
                     <div className="feed">
-                        <UserList user={this.state.user} add_friend={this.add_friend} remove_friend={this.remove_friend}/>
+                        <UserList user={this.state.user} users={this.state.users} add_friend={this.add_friend} remove_friend={this.remove_friend}/>
                     </div>
                 </div>
             </div>

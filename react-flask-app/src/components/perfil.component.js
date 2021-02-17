@@ -103,7 +103,7 @@ export default class Perfil extends Component {
                         <h4>{this.state.name}</h4>
                         {this.props.match.params.userId==JSON.parse(localStorage.getItem("session")).user._id && 
                         <>
-                        <EditProfileButton updateProfile={this.updateProfile}/>
+                        <EditProfileButton updateProfile={this.updateProfile} user={this.state.user}/>
                         <h6 id="h6">Tu actividad:</h6>
                         <ProfileTable dates={this.state.dates}/>
                         </>}                    

@@ -108,7 +108,6 @@ let socket = io.connect("http://localhost:5000");
 export default function UserList(props) {
  const [searchTerm, setSearchTerm] = useState("");
  const [searchResults, setSearchResults] = useState([]);
- const [users,setUsers] = useState([]);
  const styles = useStyles();
  const sessionStr = localStorage.getItem("session")
  const sessionJson = JSON.parse(sessionStr)
@@ -120,14 +119,14 @@ export default function UserList(props) {
 
  const handleSubmit = (e) => {
     e.preventDefault();
-    const results = users.filter(user =>
+    const results = props.users.filter(user =>
         user.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setSearchResults(results);
   }
   
  useEffect(() => {
-    const results = users.filter(user =>
+    const results = props.users.filter(user =>
       user.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setSearchResults(results);
@@ -137,13 +136,7 @@ export default function UserList(props) {
       );
       setSearchResults(results);
     })
-    socket.emit('users',users)
-  }, [users]);
-
-  useEffect(() => {
-    fetch("/personas",{method:'GET'}).then(res=>res.json())
-        .then(data=>setUsers(data.users))
-  },[props.user])
+  }, [props.users]);
 
   return (
     <>
