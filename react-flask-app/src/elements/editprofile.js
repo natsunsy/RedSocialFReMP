@@ -25,7 +25,6 @@ export default function EditProfileButton({updateProfile,user}) {
   const [open, setOpen] = React.useState(false);
   const [labor, setLabor] = React.useState(user.labor);
   const [imageUrl, setImageUrl] = React.useState(user.imageUrl);
-  const [users,setUsers] = React.useState([]);
 
   const handleChangeLabor = (event) => {
     setLabor(event.target.value);
@@ -46,8 +45,7 @@ export default function EditProfileButton({updateProfile,user}) {
   const handleUpdate = () => {
     updateProfile(labor,imageUrl)
     fetch("/personas",{method:'GET'}).then(res=>res.json())
-        .then(data=>setUsers(data.users))
-    socket.emit('users',users)
+        .then(data=>socket.volatile.emit('users',data.users))
     setOpen(false)
   }
 

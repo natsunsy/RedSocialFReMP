@@ -29,12 +29,14 @@ export default class People extends Component {
         .then(data=>this.setState({users:data.users}))
     }
 
-    add_friend = friend=>{
+    add_friend = async(friend)=>{
         const sessionStr = localStorage.getItem("session")
         const sessionJson = JSON.parse(sessionStr)
         const userId = sessionJson.user._id
-        let socket = io.connect("http://localhost:5000");
-        fetch(`/users/${userId}/friends/`,{
+        let socket = io.connect("http://localhost:5000", {
+            withCredentials: true,
+          });
+        await fetch(`/users/${userId}/friends/`,{
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -47,24 +49,26 @@ export default class People extends Component {
             this.setState({user:data.user})
         })
         fetch("/personas",{method:'GET'}).then(res=>res.json())
-        .then(data=>this.setState({users:data.users}))
-        socket.emit('users',this.state.users)
+        .then(data => {this.setState({users:data.users})
+                       socket.volatile.emit('users',data.users)})
       }
     
-    remove_friend = friendId =>{
+    remove_friend =async (friendId) =>{
         const sessionStr = localStorage.getItem("session")
         const sessionJson = JSON.parse(sessionStr)
         const userId = sessionJson.user._id
-        let socket = io.connect("http://localhost:5000");
-        fetch(`/users/${userId}/friends/${friendId}/`,{method: "DELETE"}).then(res=>res.json())
+        let socket = io.connect("http://localhost:5000", {
+            withCredentials: true,
+          });
+        await fetch(`/users/${userId}/friends/${friendId}/`,{method: "DELETE"}).then(res=>res.json())
         .then(data => {
             localStorage.setItem("session", JSON.stringify(data))
             this.setState({user:{}})
         })
         fetch("/personas",{method:'GET'}).then(res=>res.json())
-        .then(data=>this.setState({users:data.users}))
-        socket.emit('users',this.state.users)
-      }
+        .then(data => {this.setState({users:data.users})
+                       socket.volatile.emit('users',data.users)})
+    }
 
     render() {
         if(!this.state.loggedIn){
