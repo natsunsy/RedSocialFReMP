@@ -49,11 +49,31 @@ export default function Post({id,userId,image, username, message,timestamp,handl
     const sessionJson = JSON.parse(sessionStr)
     const userIdStorage = sessionJson.user._id
     const [userImageUrl,setUserImageUrl] = React.useState('');
+    const [like,setLike] = React.useState(false);
+    const [countLikes,setCountLikes] = React.useState(0);
     timestamp = new Date(timestamp);
     const [open, setOpen] = React.useState(false);  
     React.useEffect(() => {
         fetch("/perfil/"+userId).then(res=>res.json()).then(data=>{setUserImageUrl(data.user.imageUrl)})
     }, [])
+    
+    const handleLike = () => {
+      setLike(!like)
+    }
+
+    React.useEffect(()=>{
+      if (like) {fetch(`/inicio/posts/${id}/likes`,{
+                      method: "POST",
+                      headers: {
+                          "Content-Type": "application/json"
+                      },
+                      body: JSON.stringify({"userId":userId,"username":username}),
+                      withCredentials: "include"}).then(res=>res.json()).then(data=>setCountLikes(data.count))
+                  }
+      else{fetch(`/inicio/posts/${id}/likes/${userId}`,{method: "DELETE",withCredentials: "include"})
+      .then(res=>res.json()).then(data=>setCountLikes(data.count))}
+    },[like])
+    
     const handleClickOpen = () => {
         setOpen(true);
       };
@@ -61,7 +81,7 @@ export default function Post({id,userId,image, username, message,timestamp,handl
       const handleClose = () => {
         setOpen(false);
       };
-    //TODO FUNCIONALIDAD DE BOTONES DE POST, MENSAJERÍA
+    //TODO FUNCIONALIDAD DE COMENTAR Y COMPARTIR DE POST, MENSAJERÍA
     return (
     <div className="post">
         <div className="post__top">
@@ -99,21 +119,20 @@ export default function Post({id,userId,image, username, message,timestamp,handl
         {image &&<div className="post__image">
             <img src={image} alt=""/>
         </div>}
-        
-
+        <div className="post__details">{countLikes>0 &&
+        <div className="post__likeInfo">A {countLikes} personas les gusta esto.</div>}
+        </div>
         <div className="post__options">
-            <div className="post__option">
-                <ThumbUpIcon />
-                <p>Me gusta</p>
-            </div>
-            <div className="post__option">
-                <ChatBubbleOutlineIcon />
-                <p>Comentar</p>
-            </div>
-            <div className="post__option">
-                <NearMeIcon />
-                <p>Compartir</p>
-            </div>
+            <Button className="post__option" onClick={handleLike} color={like?"primary":""}>
+              <ThumbUpIcon /> Me gusta
+            </Button>
+            
+            <Button className="post__option">
+              <ChatBubbleOutlineIcon/> Comentar
+            </Button>
+            <Button className="post__option">
+              <NearMeIcon/> Compartir
+            </Button>
         </div>
     </div>
     );

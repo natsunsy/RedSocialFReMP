@@ -132,6 +132,19 @@ def delete_post(userId,_id):
     db.db.post_collection.delete_one({"userId":userId,"_id":_id})
     return {"post":{}}
 
+@app.route('/inicio/posts/<postId>/likes',methods=['POST'])
+def add_like(postId):
+    friend = json.loads(request.data)
+    db.db.post_collection.update({"_id":objectid.ObjectId(postId)},{"$addToSet":{"likes":friend}})
+    countLikes = len(db.db.post_collection.find_one({"_id":objectid.ObjectId(postId)})["likes"])
+    return {"countLikes":countLikes}
+
+@app.route('/inicio/posts/<postId>/likes/<userId>',methods=['DELETE'])
+def delete_like(postId,userId):
+    db.db.post_collection.update({"_id":objectid.ObjectId(postId)},{"$pull":{"likes":{"userId":userId}}})
+    countLikes = len(db.db.post_collection.find_one({"_id":objectid.ObjectId(postId)})["likes"])
+    return {"countLikes":countLikes}
+
 @app.route('/perfil/<userId>',methods=['GET'])
 def get_user(userId):
     userId = objectid.ObjectId(userId)
@@ -162,7 +175,12 @@ def get_users():
 
 @socketio.on('users')
 def handle_users(users):
+    print("USEEEEEERS")
     emit('usersResponse',users,broadcast=True)
+
+#@socketio.on('connect')
+#def test_connect():
+#    print("CONNECTED")
 
 @app.route('/users/<userId>/friends/',methods=['POST'])
 def add_friend(userId):
