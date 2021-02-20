@@ -139,10 +139,19 @@ def add_like(postId):
     countLikes = len(db.db.post_collection.find_one({"_id":objectid.ObjectId(postId)})["likes"])
     return {"countLikes":countLikes}
 
+@app.route('/inicio/posts/<postId>/likes',methods=['GET'])
+def get_likes(postId):
+    peopleLiked = db.db.post_collection.find_one({"_id":objectid.ObjectId(postId)})["likes"]
+    countLikes = len(peopleLiked)
+    peopleLiked = JsonEncoder(peopleLiked)
+    return {"countLikes":countLikes,"peopleLiked":peopleLiked}
+
 @app.route('/inicio/posts/<postId>/likes/<userId>',methods=['DELETE'])
 def delete_like(postId,userId):
     db.db.post_collection.update({"_id":objectid.ObjectId(postId)},{"$pull":{"likes":{"userId":userId}}})
     countLikes = len(db.db.post_collection.find_one({"_id":objectid.ObjectId(postId)})["likes"])
+    peopleLiked = db.db.post_collection.find_one({"_id":objectid.ObjectId(postId)})["likes"]
+    peopleLiked = JsonEncoder(peopleLiked)
     return {"countLikes":countLikes}
 
 @app.route('/perfil/<userId>',methods=['GET'])

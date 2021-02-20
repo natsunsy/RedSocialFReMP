@@ -48,8 +48,9 @@ export default function Post({id,userId,image, username, message,timestamp,handl
     const sessionStr = localStorage.getItem("session")
     const sessionJson = JSON.parse(sessionStr)
     const userIdStorage = sessionJson.user._id
+    const usernameStorage = sessionJson.user.username
     const [userImageUrl,setUserImageUrl] = React.useState('');
-    const [like,setLike] = React.useState(false);
+    const [like,setLike] = React.useState();
     const [countLikes,setCountLikes] = React.useState(0);
     timestamp = new Date(timestamp);
     const [open, setOpen] = React.useState(false);  
@@ -58,20 +59,28 @@ export default function Post({id,userId,image, username, message,timestamp,handl
     }, [])
     
     const handleLike = () => {
-      setLike(!like)
-    }
-
-    React.useEffect(()=>{
-      if (like) {fetch(`/inicio/posts/${id}/likes`,{
+       if (like) {setLike(false)
+                  fetch(`/inicio/posts/${id}/likes/${userIdStorage}`,{method: "DELETE",withCredentials: "include"})
+              .then(res=>res.json()).then(data=>{setCountLikes(data.countLikes) })
+       }
+      else{setLike(true)
+            fetch(`/inicio/posts/${id}/likes`,{
                       method: "POST",
                       headers: {
                           "Content-Type": "application/json"
                       },
-                      body: JSON.stringify({"userId":userId,"username":username}),
-                      withCredentials: "include"}).then(res=>res.json()).then(data=>setCountLikes(data.count))
+                      body: JSON.stringify({"userId":userIdStorage,"username":usernameStorage}),
+                      withCredentials: "include"}).then(res=>res.json()).then(data=>{setCountLikes(data.countLikes)})
                   }
-      else{fetch(`/inicio/posts/${id}/likes/${userId}`,{method: "DELETE",withCredentials: "include"})
-      .then(res=>res.json()).then(data=>setCountLikes(data.count))}
+    }
+
+    React.useEffect(()=>{
+      fetch(`/inicio/posts/${id}/likes`,{withCredentials: "include"}).then(res=>res.json())
+        .then(data=>{setCountLikes(data.countLikes)
+          if(data.peopleLiked.find(user=>user.userId===userIdStorage)){
+            setLike(true)
+          }else{setLike(false)}
+        })
     },[like])
     
     const handleClickOpen = () => {
