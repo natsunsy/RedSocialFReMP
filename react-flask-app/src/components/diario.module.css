@@ -25,7 +25,9 @@
 [class*="col-"] {
   width: 100%;
 }
-
+.journal{
+  padding:15% 5%;
+}
 .todayLabel{
   margin-top: 5px;
   margin-bottom: 10px;

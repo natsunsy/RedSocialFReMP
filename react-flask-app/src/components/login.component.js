@@ -104,7 +104,6 @@ export default class Login extends Component {
       }
       const {errors} = this.state;
       const responseGoogle = (response) => {
-        console.log(response)
         this.signup(response);
       }
         return (

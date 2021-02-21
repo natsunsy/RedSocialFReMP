@@ -32,6 +32,19 @@
     padding: 2% 5%;
 }
 
+.post__details{
+    display: flex;
+    position: relative;
+    align-items: center;
+    padding:0px 15px;
+}
+.post__likeInfo{
+    text-align: left;
+    font-size: small;
+    color: gray;
+
+}
+
 .post__image > img {
     width: 60%;
 }

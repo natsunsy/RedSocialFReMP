@@ -4,8 +4,10 @@ import db
 from emotion_recognition import predict_emotion
 import datetime
 from flask_socketio import SocketIO, emit
+from flask_bcrypt import Bcrypt
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
+bcrypt = Bcrypt(app)
 
 def JsonEncoder(mongoArray):
     for obj in mongoArray:
@@ -28,7 +30,7 @@ def sign_in():
     if not existent_user:
         return {"loggedIn":False,"message": "El correo no existe. Por favor, intente con otro correo.","classStyle":"alert alert-danger"}
     else:
-        if user["password"] == existent_user["password"]:
+        if bcrypt.check_password_hash(existent_user["password"], user["password"]) :
             return {"loggedIn":True, "user":existent_user}
         else:
             return {"loggedIn":False,"message": "Contraseña incorrecta.","classStyle":"alert alert-danger"}
@@ -112,7 +114,13 @@ def add_post():
 @app.route('/inicio/posts/<userId>/',methods=['GET'])
 def get_posts(userId):
     userId = objectid.ObjectId(userId)
-    posts = [post for post in db.db.post_collection.find({"userId":userId})]
+    obj_ids =[]
+    obj_ids.append(userId)
+    for friend in db.db.usuario_collection.find({"_id":userId,"friends.status":"amigos"},{"friends.id":1,"_id":0}):
+        friends = friend
+        for uId in friends['friends']:
+            obj_ids.append(objectid.ObjectId(uId['id']))
+    posts = [post for post in db.db.post_collection.find({"userId":{"$in":obj_ids}})]
     posts.reverse()                                                                                                                                
     posts = JsonEncoder(posts)
     return {"posts":posts}
@@ -124,12 +132,49 @@ def delete_post(userId,_id):
     db.db.post_collection.delete_one({"userId":userId,"_id":_id})
     return {"post":{}}
 
+@app.route('/inicio/posts/<postId>/likes',methods=['POST'])
+def add_like(postId):
+    friend = json.loads(request.data)
+    db.db.post_collection.update({"_id":objectid.ObjectId(postId)},{"$addToSet":{"likes":friend}})
+    countLikes = len(db.db.post_collection.find_one({"_id":objectid.ObjectId(postId)})["likes"])
+    return {"countLikes":countLikes}
+
+@app.route('/inicio/posts/<postId>/likes',methods=['GET'])
+def get_likes(postId):
+    peopleLiked = db.db.post_collection.find_one({"_id":objectid.ObjectId(postId)})["likes"]
+    countLikes = len(peopleLiked)
+    peopleLiked = JsonEncoder(peopleLiked)
+    return {"countLikes":countLikes,"peopleLiked":peopleLiked}
+
+@app.route('/inicio/posts/<postId>/likes/<userId>',methods=['DELETE'])
+def delete_like(postId,userId):
+    db.db.post_collection.update({"_id":objectid.ObjectId(postId)},{"$pull":{"likes":{"userId":userId}}})
+    countLikes = len(db.db.post_collection.find_one({"_id":objectid.ObjectId(postId)})["likes"])
+    peopleLiked = db.db.post_collection.find_one({"_id":objectid.ObjectId(postId)})["likes"]
+    peopleLiked = JsonEncoder(peopleLiked)
+    return {"countLikes":countLikes}
+
 @app.route('/perfil/<userId>',methods=['GET'])
 def get_user(userId):
     userId = objectid.ObjectId(userId)
     user = db.db.usuario_collection.find_one({"_id":userId})
+    completed_tasks_dates = [date for date in db.db.diario_collection.aggregate([{"$match":{"userId":userId}},{"$group":{"_id":"$date"}},{"$sort":{"_id":-1}}])]
     user = JsonEncodeOne(user)
-    return {"user":user}
+    return {"user":user,"dates":completed_tasks_dates}
+
+@app.route('/perfil/<userId>',methods=['POST'])
+def update_user(userId):
+    data = json.loads(request.data)
+    userId = objectid.ObjectId(userId)
+    if data["labor"] and data["imageUrl"]:
+        db.db.usuario_collection.update_one({"_id":userId},{"$set":{"labor":data["labor"],"imageUrl":data["imageUrl"]}})
+    elif not data["labor"]:
+        db.db.usuario_collection.update_one({"_id":userId},{"$set":{"imageUrl":data["imageUrl"]}})
+    elif not data["imageUrl"]:
+        db.db.usuario_collection.update_one({"_id":userId},{"$set":{"labor":data["labor"]}})
+    user = db.db.usuario_collection.find_one({"_id":userId})
+    user = JsonEncodeOne(user)
+    return {"loggedIn":True,"user":user}
 
 @app.route('/personas',methods=['GET'])
 def get_users():
@@ -139,7 +184,12 @@ def get_users():
 
 @socketio.on('users')
 def handle_users(users):
+    print("USEEEEEERS")
     emit('usersResponse',users,broadcast=True)
+
+#@socketio.on('connect')
+#def test_connect():
+#    print("CONNECTED")
 
 @app.route('/users/<userId>/friends/',methods=['POST'])
 def add_friend(userId):
