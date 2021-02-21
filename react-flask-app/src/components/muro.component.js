@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom/cjs/react-router-dom";
-import Header from "../elements/header";
+import Navbar from "../elements/navbar";
 import MessageSender from "../elements/messagesender";
 import Post from "../elements/post";
 import TimeAgo from 'javascript-time-ago'
@@ -81,7 +81,7 @@ export default class Muro extends Component{
                                                     />)
         return(
             <div>
-                <Header title="Inicio"/>
+                <Navbar title="Inicio"/>
                 <div className="inicio">
                     <div className="feed">
                         <MessageSender handleAddPost={this.handleAddPost}/>

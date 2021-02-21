@@ -14,17 +14,21 @@ export default class Photo extends Component{
         else
             loggedIn = sessionJson.loggedIn
         this.state={loggedIn}
+        this.handleSubmit.bind()
     }
     setRef = webcam => {
         this.webcam = webcam;
       };
-    
-    capture = () => {
+    handleSubmit=() =>{
+        this.capture()
+        this.props.history.push("inicio")
+    }
+    capture = async() => {
         const imageSrc = this.webcam.getScreenshot();
         const sessionStr = localStorage.getItem("session")
         const sessionJson = JSON.parse(sessionStr)
         const photo = {userId:sessionJson.user._id,photo:imageSrc}
-        fetch("/photo",{
+        await fetch("/photo",{
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -35,7 +39,6 @@ export default class Photo extends Component{
         .then(data=>{
             localStorage.setItem("session", JSON.stringify(data))
         })
-        this.props.history.push("inicio")
       };
 
     render(){
@@ -50,7 +53,7 @@ export default class Photo extends Component{
         return(
             <div className="auth-wrapper">
                 <div className="auth-inner">
-                    <form className="cameraFrame" onSubmit={this.capture}>
+                    <form className="cameraFrame" onSubmit={this.handleSubmit}>
                         <Webcam
                         audio={false}
                         height={"80%"}

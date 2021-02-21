@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import bcrypt from 'bcryptjs';
 const validEmailRegex = RegExp(
     /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
   );
@@ -68,7 +69,9 @@ export default class SignUp extends Component {
 
       handleSubmit = async event => {
         event.preventDefault();
-        const new_user = {name:this.state.name+" "+this.state.lastname, email:this.state.email, password:this.state.password, labor:"", imageUrl:"",friends:[]};
+        
+        const hash = bcrypt.hashSync(this.state.password,12)
+        const new_user = {name:this.state.name+" "+this.state.lastname, email:this.state.email, password:hash, labor:"", imageUrl:"",friends:[]};
         await fetch("/sign-up",{
             method: "POST",
             headers: {
