@@ -104,9 +104,9 @@ const useStyles = makeStyles({
         width:"inherit"
     }
   });
-let socket = io.connect("http://localhost:5000", {
+/*let socket = io.connect("https://redsocial-305406.web.app", {
   withCredentials: true,
-});
+});*/
 export default function UserList(props) {
  const [searchTerm, setSearchTerm] = useState("");
  const [searchResults, setSearchResults] = useState([]);
@@ -132,13 +132,13 @@ export default function UserList(props) {
       user.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setSearchResults(results);
-    socket.on("usersResponse",users => {
+    /*socket.on("usersResponse",users => {
       console.log(users)
       const results = users.filter(user =>
         user.name.toLowerCase().includes(searchTerm.toLowerCase())
       );
       setSearchResults(results);
-    })
+    })*/
   }, [props.users]);
 
   return (
