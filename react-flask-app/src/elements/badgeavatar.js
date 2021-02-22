@@ -3,8 +3,8 @@ import Badge from '@material-ui/core/Badge';
 import Avatar from '@material-ui/core/Avatar';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import FELIZ from "../static/FELIZ.png";
-/*import ASUSTADO from "../static/ASUSTADO.png";*/
-import ATERRADO from "../static/ATERRADO.png";
+import ASUSTADO from "../static/ASUSTADO.png";
+import DESPRECIO from "../static/DESPRECIO.png";
 import DISGUSTADO from "../static/DISGUSTADO.png";
 import MOLESTO from "../static/MOLESTO.png";
 import NEUTRAL from "../static/NEUTRAL.png";
@@ -46,8 +46,11 @@ export default function BadgeAvatar({feeling,userImageUrl}) {
     case 'molesto':
       setSrc(MOLESTO)
       break;
-    case 'aterrado':
-      setSrc(ATERRADO)
+    case 'desprecio':
+      setSrc(DESPRECIO)
+      break;
+    case 'asustado':
+      setSrc(ASUSTADO)
       break;
     case 'neutral':
       setSrc(NEUTRAL)
