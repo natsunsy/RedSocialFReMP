@@ -1,4 +1,5 @@
 import React,{useState,useEffect} from "react";
+import { useHistory } from "react-router-dom";
 import { makeStyles, withStyles } from '@material-ui/core/styles';
 import { Avatar, IconButton, Tooltip } from '@material-ui/core';
 import { HiUserAdd, HiUserRemove } from "react-icons/hi";
@@ -111,10 +112,12 @@ export default function UserList(props) {
  const [searchTerm, setSearchTerm] = useState("");
  const [searchResults, setSearchResults] = useState([]);
  const styles = useStyles();
- const sessionStr = localStorage.getItem("session")
- const sessionJson = JSON.parse(sessionStr)
- const userId = sessionJson.user._id
+ const sessionStr = localStorage.getItem("session");
+ const sessionJson = JSON.parse(sessionStr);
+ const userId = sessionJson.user._id;
  
+ let history = useHistory();
+
  const handleChange = event => {
     setSearchTerm(event.target.value);
   };
@@ -126,7 +129,17 @@ export default function UserList(props) {
       );
       setSearchResults(results);
   }
-  
+
+  const routeChange = (item) =>{ 
+    let user = item.friends.filter(friend => friend.id === userId);
+    if(user !== null){
+      const roomId = user[0].room;
+      //console.log("myroom"+roomId)
+      let path = `/chat/${roomId}/${item._id}`;
+      history.push(path); 
+    }
+  }
+
  useEffect(() => {
     const results = props.users.filter(user =>
       user.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -156,6 +169,7 @@ export default function UserList(props) {
             </div>
         </div>
       <ul className={styles.ul}>
+        {console.log(searchResults)}
          {searchResults.map(item => (
           <li key={item._id} className={styles.li}>
               <UserListAvatar src={item.imageUrl}/>
@@ -184,7 +198,8 @@ export default function UserList(props) {
 /*TODO si el status está en por confirmar mostrar botones para aceptar(POST) o rechazar(DELETE) en el perfil del que mandó la solicitud */
             : item.friends.find(friend=>friend.id===userId).status==="amigos" ? 
               <Tooltip title="Mensaje" placement="bottom">
-                <IconButton aria-label="message_friend" className={styles.addFriend}>
+                <IconButton aria-label="message_friend" className={styles.addFriend} onClick={() => routeChange(item)}>
+                  {console.log(item)}
                   <RiMessageFill />
                 </IconButton>
               </Tooltip>

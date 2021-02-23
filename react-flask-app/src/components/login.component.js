@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {Redirect} from "react-router-dom";
 import { GoogleLogin } from 'react-google-login';
+
 const validEmailRegex = RegExp(
     /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i
   );
