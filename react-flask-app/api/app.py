@@ -210,9 +210,9 @@ def delete_friend(userId,friendId):
     user = JsonEncodeOne(db.db.usuario_collection.find_one({"_id":objectid.ObjectId(userId)}))
     return {"loggedIn":True,"user":user}
 
-@app.route('/messages',methods=['GET'])
-def get_messages():
-    messages = [message for message in db.db.message_collection.find()]
+@app.route('/messages/<roomId>/',methods=['GET'])
+def get_messages(roomId):
+    messages = [message for message in db.db.message_collection.find({"roomId":roomId})]
     messages = JsonEncoder(messages)
     return {"messages":messages}
 

@@ -68,7 +68,7 @@ const Chat = () => {
             loggedIn = sessionJson.loggedIn
 
     const getMessages = async() => {
-        fetch("/messages",{method:'GET'}).then(res=>res.json())
+        fetch(`/messages/${roomId}/`,{method:'GET'}).then(res=>res.json())
         .then((data) => {
             setMessages(data.messages);
         })
