@@ -3,7 +3,7 @@ from bson import json_util,objectid
 import db
 from emotion_recognition import predict_emotion
 from datetime import datetime
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, join_room, leave_room
 from flask_bcrypt import Bcrypt
 app = Flask(__name__)
 socketio = SocketIO(app, cors_allowed_origins="*")
@@ -228,15 +228,17 @@ def handle_send_message_event(data):
     #save_message(data['room'], data['message'], data['userId'])
     print(data)
     print("MENSAJE_SOCKET")
-    db.db.message_collection.insert_one({'roomId': data['roomId'], 'message': data['message'], 'sender': data['sender'], "receiver": data['receiver'] , 'createdAt': datetime.now()})
-    socketio.emit('receive_message', data, room=data['roomId'])
+    db.db.message_collection.insert_one({'roomId': data['roomId'], 'message': data['message'], 'sender': data['sender'], "receiver": data['receiver'] , 'createdAt': data['createdAt']})
+    message = JsonEncodeOne(db.db.message_collection.find_one({'roomId': data['roomId'],'createdAt': data['createdAt']}))
+    print(message)
+    emit('receive_message', message, room=message['roomId'])
 
 #UNIR LA SALA
 @socketio.on('join_room')
 def handle_join_room_event(data):
     #app.logger.info("{} has joined the room {}".format(data['userId'], data['roomId']))
     print("UNIDO A LA SALA")
-    join_room(data.roomId)
+    join_room(data['roomId'])
     #socketio.emit('join_room_announcement', data, room=data['roomId'])
 
 #DEJAR LA SALA

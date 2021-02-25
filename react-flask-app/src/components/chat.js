@@ -97,21 +97,28 @@ const Chat = () => {
             sender: userId,
             receiver: friendId,
             roomId: roomId,
-            createdAt: ""
+            createdAt: new Date()
         }
-        console.log(data);
+        //console.log(data);
         if(message){
             socket.emit('send_message', data);
         }
+        setMessage("");
     }
 
     useEffect(() => {
-        socket.on('receive_message', (message) => {
-            console.log("mensaje recibido: " + message)
-            setMessages([...messages, message])
+        //getMessages();
+        socket.on('receive_message', (data) => {
+          console.log("receive");
+          console.log(data);
+            if(messages !== null){
+              setMessages([...messages, data]);
+            }
+            console.log(messages);
         })
-        console.log("entra al useffect")
-    }, [message])
+
+        console.log("entra al useffect");
+    },[messages])
 
     return (
         !loggedIn ? history.push("/") :
