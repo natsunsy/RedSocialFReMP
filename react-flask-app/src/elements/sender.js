@@ -1,16 +1,10 @@
-import React, {useEffect, useState, useCallback } from 'react';
-import { useHistory, useParams, Link } from "react-router-dom";
-import Navbar from "../elements/navbar";
-import { makeStyles, Paper, Container } from '@material-ui/core';
-import io from 'socket.io-client';
+import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
 import Fab from '@material-ui/core/Fab';
 import SendIcon from '@material-ui/icons/Send';
 
 const Sender = (props) => {
-
     return(
         <Grid container style={{padding: '20px'}}>
             <Grid item xs={11}>
@@ -22,5 +16,4 @@ const Sender = (props) => {
         </Grid>
     )
 } 
-
 export default Sender;

@@ -1,5 +1,5 @@
-import React, {useEffect, useState, useCallback } from 'react';
-import { useHistory, useParams, Link } from "react-router-dom";
+import React, {useEffect, useState } from 'react';
+import { useHistory, useParams } from "react-router-dom";
 import Navbar from "../elements/navbar";
 import { makeStyles, Paper, Container } from '@material-ui/core';
 import io from 'socket.io-client';
@@ -18,25 +18,23 @@ const useStyles = makeStyles((theme) => ({
       },
     },
     Muicontainer: {
-        display: 'flex',
-        flexDirection: 'column',
-        width: '900px',
-        padding: '1rem',
-        margin: '80px 250px',
-      },
+      display: 'flex',
+      flexDirection: 'column',
+      width: '83%',
+      padding: '1rem',
+      marginTop: '55px',
+      marginLeft: '229px',
+    },
     chatSection: {
       width: '100%',
-      height: '80vh'
+      height: '85vh'
     },
   }));
 
 let socket;
-
 const Chat = () => {
-    
     const [messages, setMessages] = useState(null);
     const [friends, setFriends] = useState(null);
-    const [friend, setFriend] = useState(null);
     const [message, setMessage] = useState('');
     const classes = useStyles();
     const history = useHistory();
@@ -45,19 +43,11 @@ const Chat = () => {
     const sessionJson = JSON.parse(sessionStr)
     const userId = sessionJson.user._id
     const {roomId, friendId} = useParams();
-    const {oldParam, setOldParam} = useState(null);
     let loggedIn
         if(sessionStr == null)
             loggedIn = false
         else
             loggedIn = sessionJson.loggedIn
-
-    const getFriend = async() => {
-      fetch(`/users/${friendId}/`,{method:'GET'}).then(res=>res.json())
-      .then((data) => {
-          setFriend(data.user);
-      })
-    }
 
     const getMessages = async() => {
       fetch(`/messages/${roomId}/`,{method:'GET'}).then(res=>res.json())
@@ -76,9 +66,10 @@ const Chat = () => {
     }
 
     useEffect(() => {
-      getFriend();
-      console.log(friend);
-    },[])
+      if((roomId === undefined) && (friends !== null)){
+        history.push(`/chat/${friends[0].room}/${friends[0]._id}`)
+      }
+    },[friends])
 
     useEffect(() => {
       getFriends();
@@ -94,15 +85,12 @@ const Chat = () => {
         socket = io.connect(ENDPOINT, {
           withCredentials: true,
         });
-        
         setInterval(()=>{
           socket.volatile.emit('keep_alive');
           console.log('Keeping alive');
         },30000);
-
         socket.emit('join_room', { userId , roomId });
         console.log(socket);
-
         return () => {
             socket.emit('leave_room');
             socket.off();
@@ -130,7 +118,6 @@ const Chat = () => {
             setMessages([...messages, data]);
           }
         })
-
         console.log("entra al useffect");
     },[messages])
 
@@ -140,13 +127,11 @@ const Chat = () => {
 
     return (
       !loggedIn ? history.push("/") :
-      
       <Container classes={{ root: classes.Muicontainer }}>
-      {/* PONER NOMBRE DEL USUARIO */}
       <Navbar title="Chat"/>
       <div>
         <Grid container component={ Paper } className={ classes.chatSection }>
-            <FriendsList friends={ friends }/>
+            <FriendsList friends={ friends } friendId={ friendId }/>
             <Grid item xs={9}>
             {messages && (
               <ChatBox messages={ messages }/>

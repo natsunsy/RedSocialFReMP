@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import { BrowserRouter as Router, Switch, Route, Redirect} from "react-router-dom";
 
 import SignUp from "./components/signup.component";
 import RecoverPassword from "./components/recover_password.component";
@@ -28,6 +28,7 @@ export default class App extends Component {
                 <Route path="/perfil/:userId" component={Perfil}/>
                 <Route path="/personas" component={People}/>
                 <Route path="/chat/:roomId/:friendId" component={Chat}/>
+                <Route path="/chat/" component={Chat}/>
               </Switch>
         </div>
       </Router>
