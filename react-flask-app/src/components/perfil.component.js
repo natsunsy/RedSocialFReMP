@@ -71,7 +71,7 @@ export default class Perfil extends Component {
                         dates:data.dates
                     })
                 }
-                })
+            })
         }
     }
 

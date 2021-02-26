@@ -11,7 +11,7 @@ import Muro from './components/muro.component';
 import Diario from './components/diario.component';
 import Perfil from './components/perfil.component';
 import People from './components/people.component';
-import Chat from './components/chat';
+import Chat from './components/chat.component';
 
 export default class App extends Component {
   render(){
