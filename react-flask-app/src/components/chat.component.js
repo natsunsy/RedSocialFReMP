@@ -91,7 +91,15 @@ const Chat = () => {
     },[])
 
     useEffect(() => {
-        socket = io.connect(ENDPOINT); 
+        socket = io.connect(ENDPOINT, {
+          withCredentials: true,
+        });
+        
+        setInterval(()=>{
+          socket.volatile.emit('keep_alive');
+          console.log('Keeping alive');
+        },30000);
+
         socket.emit('join_room', { userId , roomId });
         console.log(socket);
 
